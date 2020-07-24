@@ -1,0 +1,67 @@
+{
+	"pages": [
+		{
+			"path": "pages/page/message",
+			"style": {
+				"navigationBarTitleText": "消息中心"
+			}
+		},
+		{
+			"path": "pages/page/home",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/page/login",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}
+	],
+	"subPackages": [
+		{
+			"root": "subPackages",
+			"pages": [
+				{
+					"path": "home/index",
+					"style": {
+						"navigationBarTitleText": "分包页面"
+					}
+				}
+			]
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#1296DB",
+		"borderStyle": "black",
+		"backgroundColor": "#F8F8F8",
+		"list": [
+			{
+				"pagePath": "pages/page/home",
+				"iconPath": "static/business.png",
+				"selectedIconPath": "static/business2.png",
+				"text": "个人业务"
+			},
+			{
+				"pagePath": "pages/page/message",
+				"iconPath": "static/message.png",
+				"selectedIconPath": "static/business2.png",
+				"text": "消息"
+			}
+		]
+	}
+}

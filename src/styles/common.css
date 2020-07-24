@@ -1,0 +1,174 @@
+/* 通用字体 */
+.fz-6{
+    font-size: 12rpx !important;
+}
+.fz-7{
+    font-size: 14rpx !important;
+}
+.fz-8{
+    font-size: 16rpx !important;
+}
+.fz-9{
+    font-size: 18rpx !important;
+}
+.fz-10{
+    font-size: 20rpx !important;
+}
+.fz-11{
+    font-size: 22rpx !important;
+}
+.fz-12{
+    font-size: 24rpx !important;
+}
+.fz-13{
+    font-size: 26rpx !important;
+}
+.fz-14{
+    font-size: 28rpx !important;
+}
+.fz-15{
+    font-size: 30rpx !important;
+}
+.fz-16{
+    font-size: 32rpx !important;
+}
+.fz-17{
+    font-size: 34rpx !important;
+}
+.fz-18{
+    font-size: 36rpx !important;
+}
+.fz-20{
+    font-size: 40rpx !important;
+}
+.fz-22{
+    font-size: 44rpx !important;
+}
+.fz-24{
+    font-size: 48rpx !important;
+}
+.fz-26{
+    font-size: 52rpx !important;
+}
+.fw-bold {
+    font-weight: bold;
+}
+/* 字体颜色 */
+.fc-fff {
+    color: #fff !important;
+}
+.fc-999 {
+    color: #999 !important;
+}
+.fc-333 {
+    color: #333333 !important;
+}
+.fc-009 {
+    color: #0090D9 !important;
+}
+.fc-ac {
+    color: #ACACAC !important;
+}
+/* 布局 */
+.fl-cen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fl-jcen {
+    display: flex;
+    justify-content: center;
+}
+.fl-acen {
+    display: flex;
+    align-items: center;
+}
+.fl-bt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fl-co {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.fl-fo {
+    display: flex;
+    flex-direction: column;
+}
+.fl {
+    display: flex;
+}
+.fl-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+/* 偏移 */
+/* 上 */
+.mr-t-10{
+    margin-top: 10rpx;
+}
+.mr-t-20{
+    margin-top: 20rpx;
+}
+.mr-t-30{
+    margin-top: 30rpx;
+}
+.mr-t-40{
+    margin-top: 40rpx;
+}
+.mr-t-50{
+    margin-top: 50rpx;
+}
+/* 左 */
+.mr-l-10{
+    margin-left: 10rpx;
+}
+.mr-l-20{
+    margin-left: 20rpx;
+}
+.mr-l-30{
+    margin-left: 30rpx;
+}
+.mr-l-40{
+    margin-left: 40rpx;
+}
+.mr-l-50{
+    margin-left: 50rpx;
+}
+
+/* 下 */
+.mr-b-10{
+    margin-bottom: 10rpx;
+}
+.mr-b-20{
+    margin-bottom: 20rpx;
+}
+.mr-b-30{
+    margin-bottom: 30rpx;
+}
+.mr-b-40{
+    margin-bottom: 40rpx;
+}
+.mr-b-50{
+    margin-bottom: 50rpx;
+}
+/* 右 */
+.mr-r-10{
+    margin-right: 10rpx;
+}
+.mr-r-20{
+    margin-right: 20rpx;
+}
+.mr-r-30{
+    margin-right: 30rpx;
+}
+.mr-r-40{
+    margin-right: 40rpx;
+}
+.mr-r-50{
+    margin-right: 50rpx;
+}
