@@ -43,7 +43,38 @@ function saveData(key, data) {
 }
 // 获取缓存数据
 function getData(key) {
-   return uni.getStorageSync('token')
+    return uni.getStorageSync('token')
+}
+function updataImg() {
+    new Promise((resolve, reject) => {
+        uni.chooseImage({
+            count: 1,
+            success: res => {
+                resolve({
+                    imgPath: res.tempFilePaths[0],
+                    imgObj: res.tempFiles[0]
+                })
+            },
+            fail: () => {
+                reject(false)
+            }
+        })
+    })
+
+}
+function updataVideo() {
+    new Promise((resolve, reject) => {
+        uni.chooseVideo({
+            count: 1,
+            success: res => {
+                console.log(res)
+            },
+            fail: () => {
+                reject(false)
+            }
+        })
+    })
+
 }
 module.exports = {
     objCopy,
@@ -51,5 +82,7 @@ module.exports = {
     extend,
     saveData,
     getData,
+    updataImg,
+    updataVideo,
     _,
 }
