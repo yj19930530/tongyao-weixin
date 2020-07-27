@@ -24,14 +24,17 @@
         <view class="mr-t-20 fl">
           <view class="fz-15 left-text-style">当前进度：</view>
           <view class="fl item-rifht-look">
-            <text>业务员待确认</text>
-            <view class="fl-cen item-look-details mr-l-20">
+            <text class="fz-15 mr-b-10">业务员待确认</text>
+            <view class="fl-cen item-look-details mr-l-20" @tap="lookDdian">
               <text class="fz-11 fc-fff">查看</text>
+            </view>
+            <view class="fl-cen item-look-details mr-l-20" @tap="findDian">
+              <text class="fz-11 fc-fff">访查</text>
             </view>
             <view class="fl-cen item-look-details2 mr-l-20">
               <text class="fz-11 fc-fff">申请GPS安装</text>
             </view>
-            <view class="fl-cen item-look-details3 mr-l-20">
+            <view class="fl-cen item-look-details3 mr-l-20" @tap="findContract">
               <text class="fz-11 fc-fff">合同补充</text>
             </view>
           </view>
@@ -66,9 +69,26 @@ export default {
       default: 1,
     },
   },
-  mounted(){
-      console.log(this.num)
-  }
+  mounted() {
+    console.log(this.num);
+  },
+  methods: {
+    lookDdian() {
+      uni.navigateTo({
+        url: "/subPackages/pages/confirmOrder",
+      });
+    },
+    findContract() {
+      uni.navigateTo({
+        url: "/subPackages/pages/contract",
+      });
+    },
+    findDian() {
+      uni.navigateTo({
+        url: "/subPackages/pages/visit",
+      });
+    },
+  },
 };
 </script>
 <style scoped>

@@ -50,6 +50,15 @@
 .fz-26{
     font-size: 52rpx !important;
 }
+.fz-39{
+    font-size: 78rpx !important;
+}
+.fz-50{
+    font-size: 100rpx !important;
+}
+.fz-60{
+    font-size: 120rpx !important;
+}
 .fw-bold {
     font-weight: bold;
 }
@@ -122,6 +131,9 @@
 }
 .mr-t-50{
     margin-top: 50rpx;
+}
+.mr-t-60{
+    margin-top: 60rpx;
 }
 /* 左 */
 .mr-l-10{

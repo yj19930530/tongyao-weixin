@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7450650",
+      "name": "右箭头",
+      "font_class": "youjiantou",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "10908525",
+      "name": "清除格式",
+      "font_class": "qingchugeshi",
+      "unicode": "e8d3",
+      "unicode_decimal": 59603
+    },
+    {
+      "icon_id": "9306582",
+      "name": "筛选",
+      "font_class": "shaixuan",
+      "unicode": "e811",
+      "unicode_decimal": 59409
+    },
+    {
       "icon_id": "8941547",
       "name": "订单",
       "font_class": "dingdan",

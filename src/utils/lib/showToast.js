@@ -13,5 +13,5 @@ function showLoading(title) {
 }
 module.exports = {
     showToast,
-    showLoading
+    showLoading,
 }

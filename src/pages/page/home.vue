@@ -4,7 +4,7 @@
       <image class="homg-back-img" src="../../static/back.png"></image>
       <view class="top-search-box">
         <text class="fz-18 fc-fff fw-bold">成都通耀汽车业务管理系统</text>
-        <view class="search-box-style fl-acen mr-t-30">
+        <view class="search-box-style fl-acen mr-t-30" @tap="toSearch">
           <text class="iconfont icon-sousuo fz-17 fc-ac mr-l-30"></text>
           <text class="fz-15 fc-ac mr-l-30">搜索</text>
         </view>
@@ -13,6 +13,7 @@
     <div class="home-business-lsit fl-co">
       <businessItem v-for="item in 5" :key="item" :num="item" />
     </div>
+    <div class="iconfont icon-tianjia fz-50 add-order-btn fc-009" @tap="addOrders"></div>
   </view>
 </template>
 <script>
@@ -32,9 +33,14 @@ export default {
       });
   },
   methods: {
-    toPath() {
+    addOrders() {
       uni.navigateTo({
-        url: "/subPackages/home/index",
+        url: "/subPackages/pages/addOrders",
+      });
+    },
+    toSearch() {
+      uni.navigateTo({
+        url: "/subPackages/pages/findPage",
       });
     },
   },
@@ -113,5 +119,13 @@ export default {
   height: 60rpx;
   border: 1px solid #999999;
   border-radius: 60rpx;
+}
+.add-order-btn {
+  position: fixed;
+  right: 52rpx;
+  bottom: 136rpx;
+  z-index: 9;
+  background-color: #fff;
+  border-radius: 50%;
 }
 </style>

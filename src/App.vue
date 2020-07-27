@@ -19,5 +19,6 @@ export default {
 @import "./styles/iconfont/iconfont.css";
 page {
   color: #333333;
+  background-color: #F8F8F8;
 }
 </style>

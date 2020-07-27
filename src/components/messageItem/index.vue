@@ -1,5 +1,5 @@
 <template>
-  <view class="order-list fl-fo">
+  <view class="order-list fl-fo" @tap="toDetails">
     <view class="order-item-box">
       <view class="fl-bt">
         <view class="fl-acen order-has-no">
@@ -24,10 +24,18 @@ export default {
       default: 0,
     },
   },
+  methods: {
+    toDetails() {
+      uni.navigateTo({
+        url: "/subPackages/pages/messageDetails",
+      });
+    },
+  },
 };
 </script>
 <style  scoped>
 .order-list {
+  background-color: #fff;
   border-bottom: 1px solid #f8f8f8;
 }
 .order-item-box {
@@ -43,12 +51,12 @@ export default {
   position: relative;
 }
 .dian-has {
-    position: absolute;
-    left: 20rpx;
-    top: 0;
-    width: 18rpx;
-    height: 18rpx;
-    border-radius: 50%;
-    background-color: #FF0000;
+  position: absolute;
+  left: 20rpx;
+  top: 0;
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background-color: #ff0000;
 }
 </style>

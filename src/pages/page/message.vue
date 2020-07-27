@@ -2,7 +2,7 @@
   <view id="message-container">
     <view class="message-top-box fl-acen">
       <text class="fz-14 fc-999 mr-r-50 mr-l-30">未读消息2条</text>
-      <text class="iconfont icon-dingdan fz-15"></text>
+      <text class="iconfont icon-qingchugeshi fz-15"></text>
       <text class="fc-999">全部已读</text>
     </view>
     <view>

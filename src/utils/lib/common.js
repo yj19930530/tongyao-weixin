@@ -45,8 +45,9 @@ function saveData(key, data) {
 function getData(key) {
     return uni.getStorageSync('token')
 }
+// 上传图片
 function updataImg() {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         uni.chooseImage({
             count: 1,
             success: res => {
@@ -62,12 +63,14 @@ function updataImg() {
     })
 
 }
+// 上传视频
 function updataVideo() {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         uni.chooseVideo({
             count: 1,
             success: res => {
                 console.log(res)
+                resolve(res)
             },
             fail: () => {
                 reject(false)
