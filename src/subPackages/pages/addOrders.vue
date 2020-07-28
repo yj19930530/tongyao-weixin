@@ -2,14 +2,22 @@
   <view id="order-container">
     <view class="order-item-box fl-bt" @tap="toLoan">
       <text class="mr-l-30 fz-15">按贷款信息</text>
-      <view class="fl-acen mr-r-30">
+      <view class="fl-acen mr-r-30" v-if="peoType">
+        <span class="fz-14 fc-333">已填写</span>
+        <span class="iconfont icon-youjiantou fc-333"></span>
+      </view>
+      <view class="fl-acen mr-r-30" v-else>
         <span class="fz-14 fc-999">未填写</span>
         <span class="iconfont icon-youjiantou fc-999"></span>
       </view>
     </view>
     <view class="order-item-box fl-bt" @tap="toPeople">
       <text class="mr-l-30 fz-15">贷款人信息</text>
-      <view class="fl-acen mr-r-30">
+      <view class="fl-acen mr-r-30" v-if="peoType">
+        <span class="fz-14 fc-333">已填写</span>
+        <span class="iconfont icon-youjiantou fc-333"></span>
+      </view>
+      <view class="fl-acen mr-r-30" v-else>
         <span class="fz-14 fc-999">未填写</span>
         <span class="iconfont icon-youjiantou fc-999"></span>
       </view>
@@ -38,7 +46,17 @@
 const { toast } = require("../../utils/index");
 export default {
   data() {
-    return {};
+    return {
+      peoType: false,
+    };
+  },
+  onShow() {
+    const peo = uni.getStorageSync("people");
+    if (peo) {
+      this.peoType = true;
+    } else {
+      this.peoType = false;
+    }
   },
   methods: {
     closeOrder() {

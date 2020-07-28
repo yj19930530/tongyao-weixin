@@ -2,8 +2,9 @@ const { postRequest } = require('../../utils/lib/request');
 // 登录
 const userLogin = (data) => postRequest('/login', data);
 // 首页
-const home = (data) => postRequest('/sysDept/get', data);
+const getOrderList = (data) => postRequest('/busOrder/getPage', data);
+
 module.exports = {
-    home,
+    getOrderList,
     userLogin
 }

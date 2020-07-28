@@ -6,7 +6,8 @@
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false
-				}
+				},
+				"enablePullDownRefresh": true
 			}
 		},
 		{

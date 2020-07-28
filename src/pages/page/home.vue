@@ -10,29 +10,63 @@
         </view>
       </view>
     </view>
-    <div class="home-business-lsit fl-co">
-      <businessItem v-for="item in 5" :key="item" :num="item" />
-    </div>
+    <view class="home-business-lsit fl-co">
+      <businessItem v-for="(item,index) in tableList" :key="index" :num="index" :itemObj="item" />
+    </view>
+    <view class="fl-cen mr-t-30" v-if="total===0">
+      <text class="fz-14 fc-999">沒有訂單</text>
+    </view>
     <div class="iconfont icon-tianjia fz-50 add-order-btn fc-009" @tap="addOrders"></div>
   </view>
 </template>
 <script>
 const api = require("../../api/module/home.js");
-const data = require("../../utils/index.js");
+const { toast } = require("../../utils/index.js");
 export default {
   data() {
-    return {};
+    return {
+      pageNo: 1,
+      pageSize: 10,
+      isMore: true,
+      tableList:[],
+      total:0
+    };
   },
   onLoad() {
-    this.$api
-      .home({
-        id: 1,
-      })
-      .then((res) => {
-        // console.log(res);
-      });
+    // uni.hideShareMenu()
+    this.getOrdersData();
+    wx.showShareMenu({
+      withShareTicket: true,
+      title: "分享",
+      // imageUrl:'',
+      // path:''
+    });
+  },
+  async onPullDownRefresh() {
+    this.pageNo = 1;
+    this.pageSize = 10;
+    toast.showLoading("加载中");
+    await this.getOrdersData();
+    uni.hideLoading();
+    uni.stopPullDownRefresh();
+  },
+  onReachBottom() {
+    toast.showLoading("加载中");
+    // console.log("in");
+    uni.hideLoading();
   },
   methods: {
+    // 获取订单列表
+    getOrdersData() {
+      this.$api.getOrderList({
+        pageNo: this.pageNo,
+        pageSize: this.pageSize,
+      }).then(res=>{
+        console.log(res)
+        this.tableList = res.body.list;
+        this.total = res.body.total;
+      })
+    },
     addOrders() {
       uni.navigateTo({
         url: "/subPackages/pages/addOrders",

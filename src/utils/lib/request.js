@@ -27,6 +27,7 @@ uniRequest._extend({
             default: {
                 Object.assign(header, {
                     'token':token,
+                    // 'content-type':'application/json;charset=UTF-8'
                 })
                 break;
             }

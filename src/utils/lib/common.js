@@ -50,6 +50,7 @@ function updataImg() {
     return new Promise((resolve, reject) => {
         uni.chooseImage({
             count: 1,
+            sizeType:'compressed',
             success: res => {
                 resolve({
                     imgPath: res.tempFilePaths[0],

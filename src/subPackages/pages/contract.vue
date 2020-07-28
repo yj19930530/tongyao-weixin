@@ -2,7 +2,7 @@
   <view id="contract-container">
     <text class="fc-999 fz-14 mr-l-30">视频上传</text>
     <view class="video-box mr-l-30 fl-cen mr-t-30" v-if="video===''">
-      <text class="iconfont icon-tianjia"></text>
+      <text class="iconfont icon-bofang fz-60"></text>
     </view>
     <video class="video-style mr-l-30 mr-t-30" v-else :src="video"></video>
     <view class="book-img-content">
