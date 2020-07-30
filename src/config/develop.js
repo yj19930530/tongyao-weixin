@@ -1,6 +1,5 @@
 let http = '';
 const env = process.env.NODE_ENV;
-console.log(env)
 switch (env) {
     case 'test': {
         http = 'http://47.114.135.205:9998';
@@ -16,5 +15,5 @@ switch (env) {
     }
 }
 module.exports = {
-    http
+    http,
 }

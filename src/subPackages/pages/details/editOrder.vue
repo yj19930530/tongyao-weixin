@@ -78,15 +78,14 @@
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
     </view>
-    <view class="fl btn-box" v-if="!ifDetails">
-      <view class="order-btn fl-cen left-btn-back" @tap="closeOrder">取消订单</view>
-      <view class="order-btn fl-cen right-btn-back" v-if="peoType&&loanType" @tap="submitOrder">提交订单</view>
-      <view class="order-btn fl-cen right-btn-back2" v-else>提交订单</view>
+    <view class="fl btn-box">
+      <view class="order-btn fl-cen left-btn-back" @tap="closeOrder">取消修改</view>
+      <view class="order-btn fl-cen right-btn-back" @tap="submitOrder">修改订单</view>
     </view>
   </view>
 </template>
 <script>
-const { toast } = require("../../utils/index");
+const { toast } = require("../../../utils/index");
 export default {
   data() {
     return {
@@ -102,20 +101,22 @@ export default {
       lederList: [],
       lederObjList: [],
       editType: false,
+      objId: "",
     };
   },
   onLoad(obj) {
-    if (obj.type === "details") {
-      this.ifDetails = true;
-      uni.setNavigationBarTitle({
-        title: "订单查看",
-      });
-    }
+    this.objId = obj.id;
   },
   onShow() {
+    this.getDetails();
     this.getIsInput();
   },
   methods: {
+    getDetails() {
+      this.$api.getOrderDetails({
+        id: this.objId,
+      });
+    },
     lederItem(n) {
       uni.navigateTo({
         url: `/subPackages/pages/lederInformation?index=${n}`,

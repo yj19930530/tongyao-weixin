@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8309334",
+      "name": "加号-02",
+      "font_class": "jiahao-",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
       "icon_id": "6210687",
       "name": "云信勾选状态-01",
       "font_class": "yunxingouxuanzhuangtai-",

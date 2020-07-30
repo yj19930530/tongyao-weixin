@@ -7,7 +7,7 @@
       <view class="fl-bt">
         <view class="fl-fo">
           <image class="sfz-img-style" @tap="updataImgZheng('front')" v-if="faceImg===''" src="../../static/face.png"></image>
-          <image class="sfz-img-style" v-else :src="faceImg"></image>
+          <image class="sfz-img-style" v-else :src="faceImg" @tap="_previewImage(faceImg)"></image>
           <view class="fl-cen update-btn" @tap="updataImgZheng('front')" v-if="faceImg===''">
             <text class="fc-fff fz-14">上传身份证正面</text>
           </view>
@@ -17,7 +17,7 @@
         </view>
         <view class="fl-fo">
           <image class="sfz-img-style" @tap="updataImgZheng('back')" v-if="backImg===''" src="../../static/blck.png"></image>
-          <image class="sfz-img-style" v-else :src="backImg"></image>
+          <image class="sfz-img-style" v-else :src="backImg" @tap="_previewImage(backImg)"></image>
           <view class="fl-cen update-btn" @tap="updataImgZheng('back')" v-if="backImg===''">
             <text class="fc-fff fz-14">上传身份证反面</text>
           </view>
@@ -33,13 +33,14 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">主贷人姓名</text>
       <input
+        name="name"
         v-model="form.name"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
         placeholder-class="fc-999"
       />
     </view>
-    <picker @change="bindPickerChange" :value="form.sex" :range="array">
+    <picker name="sex" @change="bindPickerChange" :value="form.sex" :range="array">
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">主贷人性别</text>
         <view class="fl-acen mr-r-30">
@@ -52,6 +53,7 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">户籍</text>
       <input
+        name="registerAddress"
         v-model="form.registerAddress"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -61,6 +63,7 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">居住地址</text>
       <input
+        name="liveAddress"
         v-model="form.liveAddress"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -70,6 +73,7 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">身份证号码</text>
       <input
+        name="idNo"
         v-model="form.idNo"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -80,6 +84,7 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">签发机关</text>
       <input
+        name="idOffice"
         v-model="form.idOffice"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -89,6 +94,7 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">身份证地址</text>
       <input
+        name="idAddress"
         v-model="form.idAddress"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -98,6 +104,7 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">银行卡号</text>
       <input
+        name="bankNo"
         v-model="form.bankNo"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -109,6 +116,7 @@
       <text class="fz-15 fz-14 mr-l-30">联系电话</text>
       <input
         v-model="form.mblNo"
+        name="mblNo"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
         type="number"
@@ -152,19 +160,20 @@
         <text class="fz-14 fc-999">授权书</text>
       </view>
       <view class="img-box-shou mr-l-30" v-else>
-        <image class="book-img" :src="shouImg" />
+        <image class="book-img" :src="shouImg" @tap="_previewImage(shouImg)" />
         <view class="fl-cen mr-t-10 delete-img">
-          <text class="fz-11 fc-999" @tap="deleteImg">删除</text>
+          <text class="fz-11 fc-999" @tap="deleteImg2">删除</text>
         </view>
       </view>
     </view>
     <view class="fl-cen filish-btn" @tap="savePage">
-      <text class="fz-20 filish-btn-text fc-fff">完成</text>
+      <text class="fz-20 filish-btn-text fc-fff">保存</text>
     </view>
   </view>
 </template>
 <script>
 import { toast } from "../../utils";
+const graceChecker = require("../../utils/graceChecker");
 const { updataImg } = require("../../utils/lib/common.js");
 export default {
   data() {
@@ -182,15 +191,62 @@ export default {
         bankNo: "", // 银行卡号
         idStartTime: "起始日期", // 证件有限期起始日
         idEndTime: "截止日期", // 证件有限期截止日
-        idBack: {}, // 身份背面证照
-        idPostive: {}, // 身份正面证照
-        sqFile: {}, //授权证照
+        idBack: '', // 身份背面证照
+        idPostive: '', // 身份正面证照
+        sqFile: '', //授权证照
       },
       faceImg: "",
       backImg: "",
       isLang: false,
       shouImg: "",
       endTime: "截止日期",
+      rules: [
+        {
+          name: "name",
+          checkType: "notnull",
+          errorMsg: "请输入主贷人姓名",
+        },
+        {
+          name: "sex",
+          checkType: "notnull",
+          errorMsg: "请选择主贷人性别",
+        },
+        {
+          name: "registerAddress",
+          checkType: "notnull",
+          errorMsg: "请输入户籍",
+        },
+        {
+          name: "liveAddress",
+          checkType: "notnull",
+          errorMsg: "请输入居住地址",
+        },
+        {
+          name: "idNo",
+          checkType: "notnull",
+          errorMsg: "请输入身份证号码",
+        },
+        {
+          name: "idOffice",
+          checkType: "notnull",
+          errorMsg: "请输入签发机关",
+        },
+        {
+          name: "idAddress",
+          checkType: "notnull",
+          errorMsg: "请输入身份证地址",
+        },
+        {
+          name: "bankNo",
+          checkType: "notnull",
+          errorMsg: "请输入银行卡号",
+        },
+        {
+          name: "mblNo",
+          checkType: "phoneno",
+          errorMsg: "请输入正确的电话号码",
+        },
+      ],
     };
   },
   computed: {
@@ -204,10 +260,10 @@ export default {
   onLoad() {
     const data = uni.getStorageSync("people");
     if (data) {
-      this.form = data;
-      this.faceImg = data.idPostive.path;
-      this.backImg = data.idBack.path;
-      this.shouImg = data.sqFile.path;
+      this.form = data.form;
+      this.faceImg = data.imgObj.faceImg;
+      this.backImg = data.imgObj.backImg;
+      this.shouImg = data.imgObj.shouImg;
     }
   },
   methods: {
@@ -215,16 +271,29 @@ export default {
     savePage() {
       if (this.faceImg === "") return toast.showToast("请上传身份证正面");
       if (this.backImg === "") return toast.showToast("请上传身份证反面");
-      uni.setStorageSync("people", this.form);
-      uni.showModal({
-        title: "提示",
-        content: "保存成功",
-        showCancel: false,
-        confirmText: "返回",
-        success: function (res) {
-          uni.navigateBack();
-        },
-      });
+      const val = graceChecker.check(this.form, this.rules);
+      if (val) {
+        if (this.shouImg === "") return toast.showToast("请上传授权书");
+        uni.setStorageSync("people", {
+          form:this.form,
+          imgObj: {
+            faceImg: this.faceImg,
+            backImg: this.backImg,
+            shouImg: this.shouImg,
+          }
+        });
+        uni.showModal({
+          title: "提示",
+          content: "保存成功",
+          showCancel: false,
+          confirmText: "返回",
+          success: function (res) {
+            uni.navigateBack();
+          },
+        });
+      } else {
+        toast.showToast(graceChecker.error);
+      }
     },
     // 刪除
     deleteImg(type) {
@@ -249,10 +318,11 @@ export default {
         encoding: "base64",
         filePath: data.imgPath,
         success: (res) => {
+          toast.showLoading('上传中')
           uni.request({
             method: "POST",
-            // url: "http://yixi.market.alicloudapi.com/ocr/idcardocr",
-            url: "http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json",
+            // url: "https://yixi.market.alicloudapi.com/ocr/idcardocr",
+            url: "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json",
             data: {
               image: res.data,
               configure: sfzType,
@@ -263,8 +333,6 @@ export default {
               // "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
               Authorization: "APPCODE 8a2c3244c30b431db3b8e6e398f37670",
             },
-            // dataType: "json",
-            // responseType: "text",
             success: (res) => {
               const objData = res.data;
               if (res.statusCode === 200) {
@@ -286,9 +354,11 @@ export default {
               } else {
                 toast.showToast("请上传正确的身份证照片");
               }
+              uni.hideLoading();
             },
             error: (err) => {
               toast.showToast("err");
+              uni.hideLoading();
             },
           });
         },
@@ -341,7 +411,7 @@ export default {
         this.form.idEndTime = this.endTime;
       }
     },
-    deleteImg() {
+    deleteImg2() {
       this.shouImg = "";
       this.form.sqFile = {};
     },

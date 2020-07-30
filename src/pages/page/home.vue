@@ -1,20 +1,21 @@
 <template>
   <view id="home-page-container">
     <view class="home-top-content">
-      <image class="homg-back-img" src="../../static/back.png"></image>
+      <image class="homg-back-img" src="../../static/home.png"></image>
       <view class="top-search-box">
         <text class="fz-18 fc-fff fw-bold">成都通耀汽车业务管理系统</text>
-        <view class="search-box-style fl-acen mr-t-30" @tap="toSearch">
-          <text class="iconfont icon-sousuo fz-17 fc-ac mr-l-30"></text>
-          <text class="fz-15 fc-ac mr-l-30">搜索</text>
-        </view>
       </view>
     </view>
     <view class="home-business-lsit fl-co">
-      <businessItem v-for="(item,index) in tableList" :key="index" :num="index" :itemObj="item" />
+      <businessItem
+        v-for="(item,index) in tableList"
+        :key="index"
+        @tableList="getOrdersData"
+        :itemObj="item"
+      />
     </view>
     <view class="fl-cen mr-t-30" v-if="total===0">
-      <text class="fz-14 fc-999">沒有訂單</text>
+      <text class="fz-14 fc-999">没有更多</text>
     </view>
     <div class="iconfont icon-tianjia fz-50 add-order-btn fc-009" @tap="addOrders"></div>
   </view>
@@ -28,12 +29,11 @@ export default {
       pageNo: 1,
       pageSize: 10,
       isMore: true,
-      tableList:[],
-      total:0
+      tableList: [],
+      total: 0,
     };
   },
   onLoad() {
-    // uni.hideShareMenu()
     this.getOrdersData();
     wx.showShareMenu({
       withShareTicket: true,
@@ -45,27 +45,41 @@ export default {
   async onPullDownRefresh() {
     this.pageNo = 1;
     this.pageSize = 10;
+    this.isMore = true;
     toast.showLoading("加载中");
     await this.getOrdersData();
     uni.hideLoading();
     uni.stopPullDownRefresh();
   },
   onReachBottom() {
+    if (!this.isMore) return;
     toast.showLoading("加载中");
-    // console.log("in");
+    if (this.pageNo * this.pageSize > this.total) {
+      toast.showToast("没有更多");
+      this.isMore = false;
+    } else {
+      this.pageNo++;
+      this.getOrdersData();
+    }
     uni.hideLoading();
   },
   methods: {
     // 获取订单列表
     getOrdersData() {
-      this.$api.getOrderList({
-        pageNo: this.pageNo,
-        pageSize: this.pageSize,
-      }).then(res=>{
-        console.log(res)
-        this.tableList = res.body.list;
-        this.total = res.body.total;
-      })
+      this.$api
+        .getOrderList({
+          pageNo: this.pageNo,
+          pageSize: this.pageSize,
+        })
+        .then((res) => {
+          console.log(res);
+          if (this.pageNo > 1) {
+            this.tableList = [this.tableList, ...res.body.list];
+          } else {
+            this.tableList = res.body.list;
+          }
+          this.total = res.body.total;
+        });
     },
     addOrders() {
       uni.navigateTo({
@@ -88,12 +102,12 @@ export default {
 .home-top-content {
   position: relative;
   width: 100%;
-  height: 404rpx;
+  height: 334rpx;
 }
 .top-search-box {
   position: absolute;
   right: 0;
-  bottom: 120rpx;
+  bottom: 130rpx;
   left: 30rpx;
 }
 .search-box-style {

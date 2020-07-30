@@ -1,5 +1,7 @@
 // 常用方法
 const _ = require('underscore');
+const { http } = require('../../config/develop');
+const token = getData('token');
 /**
  * 对象合并
  * @param target object 继承目标
@@ -43,19 +45,28 @@ function saveData(key, data) {
 }
 // 获取缓存数据
 function getData(key) {
-    return uni.getStorageSync('token')
+    return uni.getStorageSync(key)
 }
 // 上传图片
 function updataImg() {
     return new Promise((resolve, reject) => {
         uni.chooseImage({
             count: 1,
-            sizeType:'compressed',
+            sizeType: 'compressed',
             success: res => {
-                resolve({
-                    imgPath: res.tempFilePaths[0],
-                    imgObj: res.tempFiles[0]
-                })
+                uni.uploadFile({
+                    url: http + '/wechatUpload/picture',
+                    name: 'file',
+                    filePath: res.tempFilePaths[0],
+                    header: { 'token': token },
+                    success: (r) => {
+                        let imgObj = JSON.parse(r.data).body;
+                        resolve({
+                            imgPath: res.tempFilePaths[0],
+                            imgObj: imgObj[0].url
+                        })
+                    }
+                });
             },
             fail: () => {
                 reject(false)
@@ -70,7 +81,6 @@ function updataVideo() {
         uni.chooseVideo({
             count: 1,
             success: res => {
-                console.log(res)
                 resolve(res)
             },
             fail: () => {

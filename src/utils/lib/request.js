@@ -1,6 +1,6 @@
 // 请求
 // const token = 
-const { http } = require('../../config/develop')
+const { http } = require('../../config/develop');
 const { extend } = require('../lib/common');
 const { toast, common } = require('../index');
 function uniRequest() { };
@@ -17,17 +17,10 @@ uniRequest._extend({
             case 'login': {
                 break;
             }
-            case 'upload': {
-                Object.assign(header, {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryJ0BstsRQ55xWJzBB'
-                });
-                break;
-            }
             default: {
                 Object.assign(header, {
-                    'token':token,
-                    // 'content-type':'application/json;charset=UTF-8'
+                    'token': token,
+                    'content-type': 'application/json;charset=UTF-8'
                 })
                 break;
             }
@@ -41,7 +34,6 @@ uniRequest._extend({
                 success: (res) => {
                     switch (res.data.code) {
                         case 0: {
-                            toast.showToast('请求成功')
                             resolve(res.data);
                             break
                         }
@@ -59,8 +51,9 @@ uniRequest._extend({
                             });
                             break
                         }
-                        default:{
+                        default: {
                             toast.showToast(res.data.msg)
+                            resolve(res.data);
                             break
                         }
                     }

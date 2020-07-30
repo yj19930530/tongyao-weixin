@@ -1,37 +1,57 @@
 <template>
   <view id="loan-container">
-    <view class="loan-form-item fl-bt mr-t-20">
-      <text class="mr-l-30 fz-15">业务品种</text>
-      <view class="fl-acen mr-r-30">
-        <picker @change="bindPickerChange" :value="index" :range="array">
-          <view class="uni-input fz-14 fc-999" v-if="index===-1">请选择</view>
-          <view class="uni-input fz-14" v-else>{{array[index]}}</view>
-        </picker>
-        <text class="iconfont icon-youjiantou"></text>
+    <picker
+      name="loanType"
+      @change="bindPickerLoan"
+      :value="form.loanType"
+      :range="loanList"
+      range-key="name"
+    >
+      <view class="loan-form-item mr-t-20 fl-bt">
+        <text class="mr-l-30 fz-15">业务品种</text>
+        <view class="fl-acen mr-r-30">
+          <view class="fl-acen">
+            <view class="uni-input fz-14 fc-999" v-if="form.loanType===''">请选择</view>
+            <view class="uni-input fz-14" v-else>{{form.loanType}}</view>
+          </view>
+          <text class="iconfont icon-youjiantou"></text>
+        </view>
       </view>
-    </view>
+    </picker>
     <view class="loan-form-item fl-bt">
       <text class="mr-l-30 fz-15">车辆品牌</text>
       <input
         class="uni-input fz-14 mr-r-30 input-width-250"
         placeholder="请输入您的车辆品牌"
         placeholder-class="fc-999"
+        name="carType"
+        v-model="form.carType"
       />
     </view>
-    <view class="loan-form-item fl-bt mr-t-20">
-      <text class="mr-l-30 fz-15">业务类型</text>
-      <view class="fl-acen mr-r-30">
-        <picker @change="bindPickerChange" :value="index" :range="array">
-          <view class="uni-input fz-14 fc-999" v-if="index===-1">请选择</view>
-          <view class="uni-input fz-14" v-else>{{array[index]}}</view>
-        </picker>
-        <text class="iconfont icon-youjiantou"></text>
+    <picker
+      name="businessType"
+      @change="bindPickerBus"
+      :value="form.businessType"
+      :range="businessList"
+      range-key="name"
+    >
+      <view class="loan-form-item mr-t-20 fl-bt">
+        <text class="mr-l-30 fz-15">业务类型</text>
+        <view class="fl-acen mr-r-30">
+          <view class="fl-acen">
+            <view class="uni-input fz-14 fc-999" v-if="form.businessType===''">请选择</view>
+            <view class="uni-input fz-14" v-else>{{form.businessType}}</view>
+          </view>
+          <text class="iconfont icon-youjiantou"></text>
+        </view>
       </view>
-    </view>
+    </picker>
     <view class="loan-form-item fl-bt">
       <text class="mr-l-30 fz-15">意向金额</text>
       <view class="fl-acen">
         <input
+          name="intentionAmount"
+          v-model="form.intentionAmount"
           class="uni-input fz-14 input-width-250 fl-cen"
           placeholder="请输入金额"
           type="digit"
@@ -40,20 +60,31 @@
         <text class="fz-14 mr-r-30">元</text>
       </view>
     </view>
-    <view class="loan-form-item fl-bt">
-      <text class="mr-l-30 fz-15">意向贷款期限</text>
-      <view class="fl-acen mr-r-30">
-        <picker @change="bindPickerChange" :value="index" :range="array">
-          <view class="uni-input fz-14 fc-999" v-if="index===-1">请选择</view>
-          <view class="uni-input fz-14" v-else>{{array[index]}}</view>
-        </picker>
-        <text class="iconfont icon-youjiantou"></text>
+
+    <picker
+      name="intentionTerm"
+      @change="bindPickerInten"
+      :value="form.intentionTerm"
+      :range="intentionList"
+      range-key="name"
+    >
+      <view class="loan-form-item mr-t-20 fl-bt">
+        <text class="mr-l-30 fz-15">意向贷款期限</text>
+        <view class="fl-acen mr-r-30">
+          <view class="fl-acen">
+            <view class="uni-input fz-14 fc-999" v-if="form.intentionTerm===''">请选择</view>
+            <view class="uni-input fz-14" v-else>{{form.intentionTerm}}</view>
+          </view>
+          <text class="iconfont icon-youjiantou"></text>
+        </view>
       </view>
-    </view>
+    </picker>
     <view class="loan-form-item fl-bt">
       <text class="mr-l-30 fz-15">意向贷款金额</text>
       <view class="fl-acen">
         <input
+          name="loanAmount"
+          v-model="form.loanAmount"
           class="uni-input fz-14 input-width-250 fl-cen"
           placeholder="请输入金额"
           type="digit"
@@ -62,23 +93,110 @@
         <text class="fz-14 mr-r-30">元</text>
       </view>
     </view>
-    <view class="save-btn fl-cen mr-t-60">
+    <view class="save-btn fl-cen mr-t-60" @tap="saveForm">
       <text class="fz-20 fc-fff le-spc">保存</text>
     </view>
   </view>
 </template>
 <script>
+const graceChecker = require("../../utils/graceChecker");
+const { toast } = require("../../utils/index");
 export default {
   data() {
     return {
-      array: ["中国", "美国", "巴西", "日本"],
-      index: -1,
+      loanList: [], // 业务品种 8
+      businessList: [], // 业务类型 10
+      intentionList: [], // 意向贷款期限 11
+      form: {
+        carType: "", // 车辆品牌
+        businessType: "", // 业务类型
+        intentionAmount: "", // 意向金额
+        intentionTerm: "", // 意向期限
+        loanAmount: "", // 意向贷款金额
+        loanType: "", // 品种
+      },
+      rules: [
+        {
+          name: "loanType",
+          checkType: "notnull",
+          errorMsg: "请选择业务品种",
+        },
+        {
+          name: "carType",
+          checkType: "notnull",
+          errorMsg: "请输入车辆品牌",
+        },
+        {
+          name: "businessType",
+          checkType: "notnull",
+          errorMsg: "请选择业务类型",
+        },
+        {
+          name: "intentionAmount",
+          checkType: "int",
+          checkRule: "1,20",
+          errorMsg: "请输入意向金额",
+        },
+        {
+          name: "intentionTerm",
+          checkType: "notnull",
+          errorMsg: "请选择意向贷款期限",
+        },
+        {
+          name: "loanAmount",
+          checkType: "int",
+          errorMsg: "请输入意向贷款金额",
+          checkRule: "1,20",
+        },
+      ],
     };
   },
+  onLoad() {
+    const formData = uni.getStorageSync("loan");
+    if (formData) {
+      this.form = formData;
+    }
+    this.getDicList();
+  },
   methods: {
-    bindPickerChange(data) {
-      console.log(data);
-      this.index = data.detail.value;
+    // 获取数据字典
+    async getDicList() {
+      this.loanList = await this.getDicData(9);
+      this.businessList = await this.getDicData(10);
+      this.intentionList = await this.getDicData(11);
+    },
+    async getDicData(id) {
+      const { body } = await this.$api.getDic({
+        catalogId: id,
+      });
+      return body.list;
+    },
+    // 保存
+    saveForm() {
+      const val = graceChecker.check(this.form, this.rules);
+      if (val) {
+        uni.setStorageSync("loan", this.form);
+        uni.showModal({
+          title: "提示",
+          content: "保存成功",
+          showCancel: false,
+          confirmText: "返回",
+          success: function (res) {
+            uni.navigateBack();
+          },
+        });
+      } else {
+        toast.showToast(graceChecker.error);
+      }
+    },
+    bindPickerLoan(data) {
+      this.form.loanType = this.loanList[data.detail.value].name;
+    },
+    bindPickerBus(data) {
+      this.form.businessType = this.businessList[data.detail.value].name;
+    },
+    bindPickerInten(data) {
+      this.form.intentionTerm = this.intentionList[data.detail.value].name;
     },
   },
 };
@@ -89,16 +207,23 @@ export default {
   border-bottom: 1px solid #f8f8f8;
   background-color: #fff;
 }
+
 .input-width-250 {
   width: 282rpx;
   text-align: right;
 }
+
 .save-btn {
   width: 100%;
   height: 108rpx;
-  background-color: #0090D9;
+  background-color: #0090d9;
 }
-.le-spc{
-  letter-spacing:20rpx;
+
+.le-spc {
+  letter-spacing: 20rpx;
+}
+
+.in-width-100 {
+  width: 100%;
 }
 </style>

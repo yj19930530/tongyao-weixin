@@ -1,6 +1,6 @@
 <template>
   <view id="login-container" class="fl-co">
-    <image class="login-back-img" src="../../static/back.png"></image>
+    <image class="login-back-img" src="../../static/loginback.png"></image>
     <view class="login-form-box fl-co">
       <text class="fz-20 fw-bold">通耀汽车业务管理系统</text>
       <view class="form-content mr-t-40">

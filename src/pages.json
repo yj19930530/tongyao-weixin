@@ -13,7 +13,8 @@
 		{
 			"path": "pages/page/message",
 			"style": {
-				"navigationBarTitleText": "消息中心"
+				"navigationBarTitleText": "历史订单",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -101,6 +102,18 @@
 					"style": {
 						"navigationBarTitleText": "搜索结果"
 					}
+				},
+				{
+					"path": "pages/details/twoCar",
+					"style": {
+						"navigationBarTitleText": "贷款详情"
+					}
+				},
+				{
+					"path": "pages/details/editOrder",
+					"style": {
+						"navigationBarTitleText": "修改订单"
+					}
 				}
 			]
 		}
@@ -127,7 +140,7 @@
 				"pagePath": "pages/page/message",
 				"iconPath": "static/message.png",
 				"selectedIconPath": "static/business2.png",
-				"text": "消息"
+				"text": "历史订单"
 			}
 		]
 	}
