@@ -1,26 +1,26 @@
 <template>
   <view class="business-lsit-box">
     <text class="fz-12 fc999 mr-l-40">2020-07-19 19：27</text>
-    <view class="business-box-card" @tap="lookDdian">
+    <view class="business-box-card" @tap="lookDdian(tableList)">
       <div class="card-content fl-fo">
         <view class="fl-bt">
           <view class="fz-15 fl-acen">
             <view class="left-text-style">订单号：</view>
-            <text>12345678</text>
+            <text>{{tableList.orderNum}}</text>
           </view>
         </view>
         <view class="fz-15 mr-t-20 fl-acen">
           <view class="left-text-style">车辆车牌：</view>
-          <text>桑塔纳</text>
+          <text>{{tableList.carType}}</text>
         </view>
         <view class="fz-15 mr-t-20 fl-acen">
           <view class="left-text-style">客户名称：</view>
-          <text>张三{{num}}</text>
+          <text>{{tableList.name}}</text>
         </view>
         <view class="mr-t-20 fl">
           <view class="fz-15 left-text-style">当前进度：</view>
           <view class="fl item-rifht-look">
-            <text class="fz-15 mr-b-10">业务员待确认</text>
+            <text class="fz-15 mr-b-10">{{tableList.processName}}</text>
           </view>
         </view>
       </div>
@@ -37,18 +37,17 @@ export default {
       type: Object,
       default: {},
     },
-    num: {
-      type: Number,
-      default: 1,
+  },
+  mounted() {},
+  computed: {
+    tableList() {
+      return this.objItem;
     },
   },
-  mounted() {
-    console.log(this.num);
-  },
   methods: {
-    lookDdian() {
+    lookDdian(row) {
       uni.navigateTo({
-        url: "/subPackages/pages/addOrders?type=details",
+        url: `/subPackages/pages/addOrders?type=details&lsId=${row.id}&custId=${row.custId}`,
       });
     },
   },

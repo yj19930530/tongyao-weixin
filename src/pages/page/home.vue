@@ -6,11 +6,12 @@
         <text class="fz-18 fc-fff fw-bold">成都通耀汽车业务管理系统</text>
       </view>
     </view>
-    <view class="home-business-lsit fl-co">
+    <view class="home-business-lsit fl-co" v-if="chiType">
       <businessItem
         v-for="(item,index) in tableList"
         :key="index"
         @tableList="getOrdersData"
+        @retOrders="retOrders"
         :itemObj="item"
       />
     </view>
@@ -22,7 +23,7 @@
 </template>
 <script>
 const api = require("../../api/module/home.js");
-const { toast } = require("../../utils/index.js");
+const { toast,common } = require("../../utils/index.js");
 export default {
   data() {
     return {
@@ -31,19 +32,22 @@ export default {
       isMore: true,
       tableList: [],
       total: 0,
+      chiType: false
     };
   },
   onLoad() {
-    this.getOrdersData();
     wx.showShareMenu({
       withShareTicket: true,
       title: "分享",
-      // imageUrl:'',
-      // path:''
     });
+  },
+  onShow(){
+    this.chiType = false;
+    this.getOrdersData();
   },
   async onPullDownRefresh() {
     this.pageNo = 1;
+    this.chiType = false;
     this.pageSize = 10;
     this.isMore = true;
     toast.showLoading("加载中");
@@ -64,6 +68,15 @@ export default {
     uni.hideLoading();
   },
   methods: {
+    retOrders(row,id){
+      this.tableList.forEach((item,index)=>{
+        if(item.id ===id){
+          for(let key in row){
+            this.tableList[index][key] = row[key];
+          }
+        }
+      })
+    },
     // 获取订单列表
     getOrdersData() {
       this.$api
@@ -72,13 +85,13 @@ export default {
           pageSize: this.pageSize,
         })
         .then((res) => {
-          console.log(res);
           if (this.pageNo > 1) {
-            this.tableList = [this.tableList, ...res.body.list];
+            this.tableList = [...this.tableList, ...res.body.list];
           } else {
             this.tableList = res.body.list;
           }
           this.total = res.body.total;
+          this.chiType = true;
         });
     },
     addOrders() {

@@ -267,6 +267,13 @@ export default {
     }
   },
   methods: {
+      // 预览图片
+    _previewImage(img) {
+      uni.previewImage({
+        urls: [img],
+        current: img,
+      });
+    },
     // 保存
     savePage() {
       if (this.faceImg === "") return toast.showToast("请上传身份证正面");
@@ -363,7 +370,6 @@ export default {
           });
         },
       });
-      // console.log(data);
     },
     timeText(time) {
       let y = time.slice(0, 4);

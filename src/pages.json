@@ -32,12 +32,6 @@
 			"root": "subPackages",
 			"pages": [
 				{
-					"path": "home/index",
-					"style": {
-						"navigationBarTitleText": "分包页面"
-					}
-				},
-				{
 					"path": "pages/addOrders",
 					"style": {
 						"navigationBarTitleText": "新增订单"
@@ -100,19 +94,44 @@
 				{
 					"path": "pages/findData",
 					"style": {
-						"navigationBarTitleText": "搜索结果"
+						"navigationBarTitleText": "搜索结果",
+						"enablePullDownRefresh": true
 					}
 				},
 				{
-					"path": "pages/details/twoCar",
+					"path": "pages/details/daikuan",
 					"style": {
 						"navigationBarTitleText": "贷款详情"
 					}
 				},
 				{
-					"path": "pages/details/editOrder",
+					"path": "pages/details/daikuanPeo",
 					"style": {
-						"navigationBarTitleText": "修改订单"
+						"navigationBarTitleText": "贷款人详情"
+					}
+				},
+				{
+					"path": "pages/details/gongdai",
+					"style": {
+						"navigationBarTitleText": "共贷人详情"
+					}
+				},
+				{
+					"path": "pages/details/image",
+					"style": {
+						"navigationBarTitleText": "相关图片详情"
+					}
+				},
+				{
+					"path": "pages/details/people",
+					"style": {
+						"navigationBarTitleText": "联系人详情"
+					}
+				},
+				{
+					"path": "pages/details/newCar",
+					"style": {
+						"navigationBarTitleText": "贷款详情"
 					}
 				}
 			]

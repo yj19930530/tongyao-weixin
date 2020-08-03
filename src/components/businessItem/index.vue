@@ -6,43 +6,43 @@
         <view class="fl-bt">
           <view class="fz-15 fl-acen">
             <view class="left-text-style">订单号：</view>
-            <text>{{tableList.orderNum}}</text>
+            <text>{{itemObj.orderNum}}</text>
           </view>
-          <view class="fl-cen">
+          <view class="fl-cen" @tap="resetOrders(itemObj)">
             <text class="fz-12 fc-009">刷新订单</text>
             <text class="iconfont icon-shuaxin fz-20 fc-009"></text>
           </view>
         </view>
         <view class="fz-15 mr-t-20 fl-acen">
           <view class="left-text-style">车辆车牌：</view>
-          <text>{{tableList.carType}}</text>
+          <text>{{itemObj.carType}}</text>
         </view>
         <view class="fz-15 mr-t-20 fl-acen">
           <view class="left-text-style">客户名称：</view>
-          <text>{{tableList.name}}</text>
+          <text>{{itemObj.name}}</text>
         </view>
         <view class="mr-t-20 fl">
           <view class="fz-15 left-text-style">当前进度：</view>
           <view class="fl item-rifht-look">
-            <text class="fz-15 mr-b-10">{{tableList.processName}}</text>
+            <text class="fz-15 mr-b-10">{{itemObj.processName}}</text>
             <view
               class="fl-cen item-look-details mr-l-20"
-              @tap="lookDdian"
-              v-if="tableList.process==='sale_sure'"
+              @tap="lookDdian(itemObj.dhId)"
+              v-if="itemObj.process==='sale_sure'"
             >
               <text class="fz-11 fc-fff">查看</text>
             </view>
             <view
               class="fl-cen item-look-details mr-l-20"
-              @tap="findDian"
-              v-if="tableList.process==='frist_examine'"
+              @tap="findDian(itemObj)"
+              v-if="itemObj.process==='frist_examine'"
             >
               <text class="fz-11 fc-fff">访查</text>
             </view>
             <view
               class="fl-cen item-look-details3 mr-l-20"
-              @tap="findContract"
-              v-if="tableList.contractState===0"
+              @tap="findContract(itemObj.custId)"
+              v-if="itemObj.contractState===0"
             >
               <text class="fz-11 fc-fff">合同补充</text>
             </view>
@@ -51,22 +51,26 @@
         <view class="fl-end">
           <div
             class="back-dan fl-cen"
-            v-if="tableList.process==='sale_sure'"
-            @tap="deleteOrder(tableList.id)"
+            v-if="itemObj.process==='sale_sure'"
+            @tap="deleteOrder(itemObj.id)"
           >
             <text class="fz-13 fc-999">退单</text>
           </div>
-          <div class="back-dan fl-cen" v-if="tableList.paymentState===0">
+          <div class="back-dan fl-cen" v-if="itemObj.paymentState===0">
             <text class="fz-13 fc-999">自垫款</text>
           </div>
-          <div class="back-dan fl-cen" v-if="tableList.paymentStateRebate===0">
+          <div class="back-dan fl-cen" v-if="itemObj.paymentStateRebate===0">
             <text class="fz-13 fc-999">请返利</text>
           </div>
-          <div class="back-dan fl-cen" v-if="tableList.process==='wait'">
-            <text class="fz-13 fc-999">提交订单</text>
-          </div>
-          <div class="back-dan fl-cen" v-if="tableList.process!=='wait'" @tap="editOrderFuc(tableList.id)">
+          <div
+            class="back-dan fl-cen"
+            v-if="itemObj.process==='wait'"
+            @tap="editOrderFuc(itemObj.id)"
+          >
             <text class="fz-13 fc-999">修改订单</text>
+          </div>
+          <div class="back-dan fl-cen" v-if="itemObj.process==='wait'" @tap="submitOrder(itemObj)">
+            <text class="fz-13 fc-999">提交订单</text>
           </div>
         </view>
       </div>
@@ -74,7 +78,7 @@
   </view>
 </template>
 <script>
-import { toast } from "../../utils";
+import { toast } from "../../utils/index";
 export default {
   data() {
     return {};
@@ -86,15 +90,30 @@ export default {
     },
   },
   mounted() {},
-  computed: {
-    tableList() {
-      return this.itemObj;
-    },
-  },
   methods: {
-    editOrderFuc(id){
+    resetOrders(row) {
+      toast.showLoading("刷新中");
+      this.$api
+        .getOrderDetails({
+          id: row.id,
+        })
+        .then((res) => {
+          uni.hideLoading();
+          this.$emit("retOrders", res.body.order, row.id);
+        })
+        .catch(() => {
+          uni.hideLoading();
+        });
+    },
+    editOrderFuc(id) {
       uni.navigateTo({
-        url: `/subPackages/pages/details/editOrder?id=${id}`,
+        url: `/subPackages/pages/loanInformation?id=${id}`,
+      });
+    },
+    // 提交订单
+    submitOrder(row) {
+      uni.navigateTo({
+        url: `/subPackages/pages/imageInformation?id=${row.custId}&orderId=${row.id}`,
       });
     },
     deleteOrder(id) {
@@ -122,19 +141,19 @@ export default {
         },
       });
     },
-    lookDdian() {
+    lookDdian(id) {
       uni.navigateTo({
-        url: "/subPackages/pages/confirmOrder",
+        url: `/subPackages/pages/confirmOrder?dhId=${id}`,
       });
     },
-    findContract() {
+    findContract(id) {
       uni.navigateTo({
-        url: "/subPackages/pages/contract",
+        url: `/subPackages/pages/contract?id=${id}`,
       });
     },
-    findDian() {
+    findDian(row) {
       uni.navigateTo({
-        url: "/subPackages/pages/visit",
+        url: `/subPackages/pages/visit?custCode=${row.custCode}&id=${row.custId}`,
       });
     },
   },
@@ -182,10 +201,11 @@ business-lsit-box {
   flex-wrap: wrap;
 }
 .back-dan {
+  margin-top: 20rpx;
   margin-left: 14rpx;
   width: 146rpx;
   height: 60rpx;
   border: 1px solid #999999;
   border-radius: 60rpx;
 }
-</style>
+</style>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 

@@ -1,45 +1,55 @@
-<template>
-    <view>
-        <text>新增订单</text>
-        <button @tap="updataVideo">上传视频</button>
-        <button @tap="updataImg">上传图片</button>
-        <video :src="video"></video>
-        <image :src="img" />
-    </view>
-</template>
-<script>
-const {common} = require('../../utils/index.js');
-export default {
-  data() {
-      return{
-          img:'',
-          video:''
-      }
-  },
-  onLoad() {},
-  methods: {
-   async updataVideo() {
-        // const data = await common.updataVideo();
-            uni.chooseVideo({
-            count: 1,
-            success: res => {
-                console.log(res.tempFilePath)
-                this.video = res.tempFilePath
-            },
-            fail: () => {
-                reject(false)
-            }
-        })
-        // console.log('in')
-    },
-   async updataImg() {
-       const data = await common.updataImg();
-       console.log(data)
-    
-    }
-  }
-};
-</script>
-<style scoped>
-</style>
+car_dealer : 车商
+is_cancellation  ：是否拆单
+cancellation_reasons  ：拆单原因
+ratings ：客户评分
+gps_info ：GPS安装信息
+car_type ：车型品牌
+car_value ： 发票价格
+car_loan ： 贷款金额
+old_car_type ：真实车型品牌
+old_car_distance ：原车公里数
+old_car_years ：原车年限
+execution_rate  ：执行利率
+send_type ：送行车型
+company_assessment  ：公司实际评估价（万）
+home_assessment  ：汽车之家评估价格
+apply_loan ：客户申请真实贷款金额
+financing_amount ：融资金额
+Investigation_fee ：调查费
+new_value ：新车价
+regeneration_rate ：成新率
+first_all ：首月总还贷金额
+next_all ：首月以后每月总还款金额
+send_loan_value ：贷款金额（送行）
+one_contacts ：第一联系人
+two_contacts ：第二联系人
+three_contacts ：第三联系人
+register ：客户户籍
+spouse_register ：配偶户籍
+unit ：客户工作单位
+spouse_unit ：配偶工作单位
+place ：客户工作地址
+spouse_place ：配偶工作地址
+home_place：实际居住地
+credit_info：征信情况
+gps_sure：安装确认
+video_sure：视频资料确认
 
+month_us：本金未处理月供
+month_odd：本金月供零头
+other_not：附加费未处理月供
+other_odd：附加费零头
+end_loan ：最终贷款金额（含所有费用不含利息）
+send_car_value ：车辆价格（送行评估价）
+first_repayment ：汽车分期贷款首月还款金额
+next_repayment ：汽车分期贷款以后每月还款金额
+loan_total ：汽车分期贷款本息合计金额
+comprehensive_total ：汽车分期综合附加服务费贷款金额
+comprehensive_first  ：汽车分期综合附加服务费贷款首月还款
+comprehensive_next ：汽车分期综合附加服务费贷款以后每月还款金额
+all_total ：汽车分期综合附加服务费贷款本息共计
+generation_home ：汽车之家贷款成数
+generation_real ：真实评估价贷款成数
+specific_type 具体车型
+other_price 其它费用
+car_loan_pro 贷款成数

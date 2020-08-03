@@ -1,14 +1,11 @@
 <script>
 export default {
   onLaunch: function () {
-    console.log("App Launch");
-    uni.showTabBarRedDot({index:1})
+    // uni.showTabBarRedDot({index:1})
   },
   onShow: function () {
-    console.log("App Show");
   },
   onHide: function () {
-    console.log("App Hide");
   },
 };
 </script>

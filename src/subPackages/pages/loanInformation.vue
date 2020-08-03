@@ -12,7 +12,7 @@
         <view class="fl-acen mr-r-30">
           <view class="fl-acen">
             <view class="uni-input fz-14 fc-999" v-if="form.loanType===''">请选择</view>
-            <view class="uni-input fz-14" v-else>{{form.loanType}}</view>
+            <view class="uni-input fz-14" v-else>{{loanName}}</view>
           </view>
           <text class="iconfont icon-youjiantou"></text>
         </view>
@@ -93,14 +93,17 @@
         <text class="fz-14 mr-r-30">元</text>
       </view>
     </view>
-    <view class="save-btn fl-cen mr-t-60" @tap="saveForm">
+    <view class="save-btn fl-cen mr-t-60" @tap="editForm" v-if="editType">
+      <text class="fz-20 fc-fff le-spc">修改</text>
+    </view>
+    <view class="save-btn fl-cen mr-t-60" @tap="saveForm" v-else>
       <text class="fz-20 fc-fff le-spc">保存</text>
     </view>
   </view>
 </template>
 <script>
 const graceChecker = require("../../utils/graceChecker");
-const { toast } = require("../../utils/index");
+const { toast, common } = require("../../utils/index");
 export default {
   data() {
     return {
@@ -115,6 +118,9 @@ export default {
         loanAmount: "", // 意向贷款金额
         loanType: "", // 品种
       },
+      editType: false,
+      editId: 0,
+      loanName: "",
       rules: [
         {
           name: "loanType",
@@ -151,14 +157,42 @@ export default {
       ],
     };
   },
-  onLoad() {
-    const formData = uni.getStorageSync("loan");
-    if (formData) {
-      this.form = formData;
+  async onLoad(obj) {
+    await this.getDicList();
+    if (obj.id) {
+      this.editType = true;
+      this.editId = obj.id;
+      this.getDetaisl();
+    } else {
+      const formData = uni.getStorageSync("loan");
+      if (formData) {
+        this.form = formData;
+        this.loanName = this.getDicRe(this.loanList, this.form.loanType);
+      }
     }
-    this.getDicList();
   },
   methods: {
+    getDicRe(list, type) {
+      let text = "";
+      list.forEach((item) => {
+        if (item.value === type) {
+          text = item.name;
+        }
+      });
+      return text;
+    },
+    // 获取详情
+    getDetaisl() {
+      this.$api
+        .getOrderDetails({
+          id: this.editId,
+        })
+        .then((res) => {
+          const data = res.body.applyInfo;
+          this.form = common.objAss(this.form, res.body.applyInfo);
+          this.loanName = this.getDicRe(this.loanList, this.form.loanType);
+        });
+    },
     // 获取数据字典
     async getDicList() {
       this.loanList = await this.getDicData(9);
@@ -189,8 +223,43 @@ export default {
         toast.showToast(graceChecker.error);
       }
     },
+    // 修改
+    editForm() {
+      const val = graceChecker.check(this.form, this.rules);
+      if (val) {
+        toast.showLoading("修改中");
+        this.$api
+          .editOrder(this.form)
+          .then((res) => {
+            uni.hideLoading();
+            if (res.code === 0) {
+              uni.showModal({
+                title: "提示",
+                content: "修改成功",
+                showCancel: false,
+                confirmText: "返回",
+                success: function (res) {
+                  uni.navigateBack();
+                },
+              });
+            } else {
+              toast.showToast("修改失败");
+            }
+          })
+          .catch(() => {
+            uni.hideLoading();
+          });
+      } else {
+        toast.showToast(graceChecker.error);
+      }
+    },
     bindPickerLoan(data) {
-      this.form.loanType = this.loanList[data.detail.value].name;
+      this.loanList.forEach((item, index) => {
+        if (index == data.detail.value) {
+          this.loanName = item.name;
+          this.form.loanType = item.value;
+        }
+      });
     },
     bindPickerBus(data) {
       this.form.businessType = this.businessList[data.detail.value].name;

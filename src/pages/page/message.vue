@@ -1,16 +1,13 @@
 <template>
   <view id="message-container">
     <view class="message-top-box fl-cen">
-      <!-- <text class="fz-14 fc-999 mr-r-50 mr-l-30">未读消息2条</text>
-      <text class="iconfont icon-qingchugeshi fz-15"></text>
-      <text class="fc-999">全部已读</text>-->
       <view class="search-box-style fl-acen mr-t-30" @tap="toSearch">
         <text class="iconfont icon-sousuo fz-17 fc-ac mr-l-30"></text>
         <text class="fz-15 fc-ac mr-l-30">搜索</text>
       </view>
     </view>
     <view class="fl-co mr-t-20">
-      <messageItem v-for="item in 5" :key="item" :num="item" />
+      <messageItem v-for="(item,index) in tableList" :key="index" :objItem="item" />
     </view>
   </view>
 </template>
@@ -33,27 +30,38 @@ export default {
   async onPullDownRefresh() {
     this.pageNo = 1;
     this.pageSize = 10;
+    this.isMore = true;
     toast.showLoading("加载中");
     await this.getOrdersData();
     uni.hideLoading();
     uni.stopPullDownRefresh();
   },
   onReachBottom() {
+    if (!this.isMore) return;
     toast.showLoading("加载中");
-    // console.log("in");
+    if (this.pageNo * this.pageSize > this.total) {
+      toast.showToast("没有更多");
+      this.isMore = false;
+    } else {
+      this.pageNo++;
+      this.getOrdersData();
+    }
     uni.hideLoading();
   },
   methods: {
     // 获取订单列表
     getOrdersData() {
       this.$api
-        .getOrderList({
+        .getMessageCenterList({
           pageNo: this.pageNo,
           pageSize: this.pageSize,
         })
         .then((res) => {
-          console.log(res);
-          this.tableList = res.body.list;
+          if (this.pageNo > 1) {
+            this.tableList = [...this.tableList, ...res.body.list];
+          } else {
+            this.tableList = res.body.list;
+          }
           this.total = res.body.total;
         });
     },

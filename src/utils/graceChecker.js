@@ -18,7 +18,6 @@ module.exports = {
 			switch (rule[i].checkType){
 				case 'string':
 					var reg = new RegExp('^.{' + rule[i].checkRule + '}$');
-					console.log(rule[i].checkRule)
 					if(!reg.test(data[rule[i].name])) {this.error = rule[i].errorMsg; return false;}
 				break;
 				case 'int':

@@ -166,7 +166,7 @@
         <text class="fz-15 fz-14 mr-l-30">与主贷人关系</text>
         <view class="fl-acen mr-r-30">
           <view class="uni-input fz-14 fc-999" v-if="form.relationType===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{form.relationType}}</view>
+          <view class="uni-input fz-14" v-else>{{relationName}}</view>
           <text class="iconfont icon-youjiantou fc-999"></text>
         </view>
       </view>
@@ -182,7 +182,7 @@
         <text class="fz-15 fz-14 mr-l-30">偿还关系</text>
         <view class="fl-acen mr-r-30">
           <view class="uni-input fz-14 fc-999" v-if="form.loanType===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{form.loanType}}</view>
+          <view class="uni-input fz-14" v-else>{{loanName}}</view>
           <text class="iconfont icon-youjiantou fc-999"></text>
         </view>
       </view>
@@ -233,6 +233,8 @@ export default {
       faceImg: "",
       backImg: "",
       isLang: false,
+      relationName:'',
+      loanName:'',
       shouImg: "",
       endTime: "截止日期",
       rules: [
@@ -305,18 +307,29 @@ export default {
       return this.getDate("end");
     },
   },
-  onLoad(obj) {
+  async onLoad(obj) {
     this.pageIndex = obj.index;
     const data = uni.getStorageSync(`leder${this.pageIndex}`);
-    this.getDicList();
+    await this.getDicList();
     if (data) {
       this.form = data.form;
       this.faceImg = data.imgOBj.faceImg;
       this.backImg = data.imgOBj.backImg;
       this.shouImg = data.imgOBj.shouImg;
+      this.relationName = this.getDicRe(this.relaList,this.form.relationType);
+      this.loanName = this.getDicRe(this.loanList,this.form.loanType);
     }
   },
   methods: {
+    getDicRe(list,type){
+      let text = '';
+      list.forEach(item=>{
+        if(item.value === type){
+          text = item.name;
+        }
+      })
+      return text;
+    },
     // 预览图片
     _previewImage(img) {
       uni.previewImage({
@@ -450,10 +463,20 @@ export default {
       this.form.sex = this.array[data.detail.value];
     },
     bindPickerRela(data) {
-      this.form.relationType = this.relaList[data.detail.value].name;
+      this.relaList.forEach((item,index)=>{
+        if(index == data.detail.value){
+          this.relationName = item.name;
+          this.form.relationType = item.value;
+        }
+      })
     },
     bindPickerLoan(data) {
-      this.form.loanType = this.loanList[data.detail.value].name;
+      this.loanList.forEach((item,index)=>{
+        if(index == data.detail.value){
+          this.loanName = item.name;
+          this.form.loanType = item.value;
+        }
+      })
     },
     bindDateChangeStart: function (e) {
       this.form.idStartTime = e.target.value;

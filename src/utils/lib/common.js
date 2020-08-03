@@ -19,6 +19,15 @@ function extend(target, copy, deep) {
         return target;
     }
 }
+// 对象复制
+function objAss(form, obj) {
+    let newObj = {}
+    for (let key in form) {
+        newObj[key] = obj[key];
+    }
+    newObj.id = obj.id;
+    return newObj;
+}
 // 浅克隆
 function objCopy(obj) {
     let newObj = {};
@@ -51,22 +60,29 @@ function getData(key) {
 function updataImg() {
     return new Promise((resolve, reject) => {
         uni.chooseImage({
-            count: 1,
+            count: 5,
             sizeType: 'compressed',
             success: res => {
-                uni.uploadFile({
-                    url: http + '/wechatUpload/picture',
-                    name: 'file',
-                    filePath: res.tempFilePaths[0],
-                    header: { 'token': token },
-                    success: (r) => {
-                        let imgObj = JSON.parse(r.data).body;
-                        resolve({
-                            imgPath: res.tempFilePaths[0],
-                            imgObj: imgObj[0].url
-                        })
-                    }
-                });
+                let imgArr = [];
+                res.tempFilePaths.forEach(item => {
+                    uni.uploadFile({
+                        url: http + '/wechatUpload/picture',
+                        name: 'file',
+                        filePath: item,
+                        header: { 'token': token },
+                        success: (r) => {
+                            let imgObj = JSON.parse(r.data).body;
+                            imgArr.push({
+                                imgPath: item,
+                                imgObj: imgObj[0].url
+                            })
+                            if (res.tempFilePaths.length === imgArr.length) {
+                                resolve(imgArr)
+                            }
+                        }
+                    });
+                })
+
             },
             fail: () => {
                 reject(false)
@@ -81,7 +97,19 @@ function updataVideo() {
         uni.chooseVideo({
             count: 1,
             success: res => {
-                resolve(res)
+                uni.uploadFile({
+                    url: http + '/wechatUpload/picture',
+                    name: 'file',
+                    filePath: res.tempFilePath,
+                    header: { 'token': token },
+                    success: (r) => {
+                        let imgObj = JSON.parse(r.data).body;
+                        resolve({
+                            imgPath: res.tempFilePath,
+                            imgObj: imgObj[0].url
+                        })
+                    }
+                });
             },
             fail: () => {
                 reject(false)
@@ -98,5 +126,6 @@ module.exports = {
     getData,
     updataImg,
     updataVideo,
+    objAss,
     _,
 }

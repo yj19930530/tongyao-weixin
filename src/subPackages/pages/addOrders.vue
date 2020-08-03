@@ -11,8 +11,8 @@
         <span class="iconfont icon-youjiantou fc-999"></span>
       </view>
     </view>
-    <view class="order-item-box fl-bt" @tap="toLoan" v-else>
-      <text class="mr-l-30 fz-15">按贷款信息</text>
+    <view class="order-item-box fl-bt" @tap="toDetailsPath('dkxx')" v-else>
+      <text class="mr-l-30 fz-15">贷款信息</text>
       <view class="fl-acen mr-r-30">
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
@@ -28,9 +28,9 @@
         <span class="iconfont icon-youjiantou fc-999"></span>
       </view>
     </view>
-    <view class="order-item-box fl-bt" @tap="toPeople" v-else>
+    <view class="order-item-box fl-bt" @tap="toDetailsPath('dkr')" v-else>
       <text class="mr-l-30 fz-15">贷款人信息</text>
-      <view class="fl-acen mr-r-30" v-if="peoType">
+      <view class="fl-acen mr-r-30">
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
     </view>
@@ -55,26 +55,31 @@
         </view>
       </view>
     </view>
-    <view class="order-item-box fl-bt" @tap="toGong" v-else>
+    <view class="order-item-box2 fl-foc" v-else>
+      <view class="fl-bt lin-hei">
+        <text class="mr-l-30 fz-15">共贷人信息</text>
+      </view>
+      <view
+        class="fl-bt lin-hei2"
+        v-for="(item,index) in lederList"
+        :key="index"
+        @tap="toDetailsPath('gdr',item.n)"
+      >
+        <text class="mr-l-30 fz-13">第{{item.n}}共贷人</text>
+        <view class="fl-acen mr-r-30">
+          <span class="iconfont icon-youjiantou fz-13 fc-999"></span>
+        </view>
+      </view>
+    </view>
+    <!-- <view class="order-item-box fl-bt" @tap="toGong" v-else>
       <text class="mr-l-30 fz-15">共贷人信息</text>
       <view class="fl-acen mr-r-30" v-if="lederType">
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
-    </view>
-    <!-- <view class="order-item-box fl-bt" @tap="toImg" v-if="!ifDetails">
-      <text class="mr-l-30 fz-15">相关图片</text>
-      <view class="fl-acen mr-r-30" v-if="otherType">
-        <span class="fz-14 fc-333">已填写</span>
-        <span class="iconfont icon-youjiantou fc-333"></span>
-      </view>
-      <view class="fl-acen mr-r-30" v-else>
-        <span class="fz-14 fc-999">未填写</span>
-        <span class="iconfont icon-youjiantou fc-999"></span>
-      </view>
     </view>-->
-    <view class="order-item-box fl-bt" @tap="toImg" v-if="ifDetails">
+    <view class="order-item-box fl-bt" v-if="ifDetails" @tap="toDetailsPath('img')">
       <text class="mr-l-30 fz-15">相关图片</text>
-      <view class="fl-acen mr-r-30" v-if="otherType">
+      <view class="fl-acen mr-r-30">
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
     </view>
@@ -102,20 +107,77 @@ export default {
       lederList: [],
       lederObjList: [],
       editType: false,
+      lsId: "",
     };
   },
   onLoad(obj) {
     if (obj.type === "details") {
       this.ifDetails = true;
+      this.lsId = obj.lsId;
+      this.custId = obj.custId;
+      this.getDetails();
       uni.setNavigationBarTitle({
         title: "订单查看",
       });
     }
   },
   onShow() {
-    this.getIsInput();
+    this.lederObjList = [];
+    if (!this.ifDetails) {
+      this.getIsInput();
+    }
   },
   methods: {
+    // 获取详情
+    getDetails() {
+      this.$api
+        .getOrderDetails({
+          id: this.lsId,
+        })
+        .then((res) => {
+          res.body.applyInfo.relationCust.splice(0, 1);
+          const data = res.body.applyInfo.relationCust;
+          let num = 0;
+          data.forEach((item) => {
+            num++;
+            this.lederList.push({
+              n: num,
+              ifWrite: true,
+            });
+          });
+        });
+    },
+    toDetailsPath(path, n) {
+      switch (path) {
+        case "img": {
+          uni.navigateTo({
+            url: `/subPackages/pages/details/image?custId=${this.custId}`,
+          });
+          break;
+        }
+        case "dkxx": {
+          uni.navigateTo({
+            url: `/subPackages/pages/details/daikuan?id=${this.lsId}`,
+          });
+          break;
+        }
+        case "dkr": {
+          uni.navigateTo({
+            url: `/subPackages/pages/details/daikuanPeo?id=${this.lsId}`,
+          });
+          break;
+        }
+        case "gdr": {
+          uni.navigateTo({
+            url: `/subPackages/pages/details/gongdai?id=${this.lsId}&index=${n}`,
+          });
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
     lederItem(n) {
       uni.navigateTo({
         url: `/subPackages/pages/lederInformation?index=${n}`,
@@ -139,8 +201,6 @@ export default {
       const list = uni.getStorageSync("lederList");
       this.peo = uni.getStorageSync("people");
       this.loan = uni.getStorageSync("loan");
-      // this.leder = uni.getStorageSync("leder");
-      // this.other = uni.getStorageSync("other");
       if (list) {
         this.lederList = list;
         this.lederList.forEach((item) => {
@@ -157,18 +217,9 @@ export default {
       } else {
         this.loanType = false;
       }
-      // if (this.leder) {
-      //   this.lederType = true;
-      // } else {
-      //   this.lederType = false;
-      // }
-      // if (this.other) {
-      //   this.otherType = true;
-      // } else {
-      //   this.otherType = false;
-      // }
     },
     closeOrder() {
+      let that = this;
       uni.showModal({
         title: "提示",
         content: "您确定要取消此订单吗？",
@@ -181,22 +232,13 @@ export default {
             uni.removeStorageSync("lederList");
             uni.removeStorageSync("people");
             uni.removeStorageSync("loan");
-            this.lederList.forEach((item) => {
+            that.lederList.forEach((item) => {
               uni.removeStorageSync(`leder${item.n}`);
             });
             uni.navigateBack();
           }
         },
       });
-    },
-    createFormDate(obj) {
-      const formData = new FormData();
-      for (let key in obj) {
-        if (obj[key] !== "" && obj[key] !== null) {
-          formData.append(key, obj[key]);
-        }
-      }
-      return formData;
     },
     submitOrder() {
       let newObj = Object.assign(this.loan, this.peo.form);
@@ -207,6 +249,13 @@ export default {
         .then((res) => {
           if (res.code === 0) {
             toast.showToast("提交成功");
+            uni.removeStorageSync("lederList");
+            uni.removeStorageSync("people");
+            uni.removeStorageSync("loan");
+            this.lederList.forEach((item) => {
+              uni.removeStorageSync(`leder${item.n}`);
+            });
+            uni.navigateBack();
           } else {
             toast.showToast("提交失败");
           }

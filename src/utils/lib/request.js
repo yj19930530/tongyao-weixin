@@ -20,7 +20,7 @@ uniRequest._extend({
             default: {
                 Object.assign(header, {
                     'token': token,
-                    'content-type': 'application/json;charset=UTF-8'
+                    // 'content-type': 'application/json;charset=UTF-8'
                 })
                 break;
             }
@@ -59,7 +59,6 @@ uniRequest._extend({
                     }
                 },
                 error: err => {
-                    console.log(err)
                     reject(err)
                 }
             })
