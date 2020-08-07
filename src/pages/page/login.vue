@@ -36,6 +36,8 @@ export default {
       form: {
         userName: "ywytest",
         password: "111111",
+        // userName: "",
+        // password: "",
       },
       loginLoading: false,
     };
@@ -47,8 +49,8 @@ export default {
       this.loginLoading = true;
       this.$api
         .userLogin({
-          userName: "ywytest",
-          password: "111111",
+          userName: this.form.userName,
+          password: this.form.password,
         })
         .then((res) => {
           common.saveData("token", res.body.token);

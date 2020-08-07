@@ -59,6 +59,9 @@ function getData(key) {
 // 上传图片
 function updataImg() {
     return new Promise((resolve, reject) => {
+        uni.showLoading({
+            title: '上传中'
+        });
         uni.chooseImage({
             count: 5,
             sizeType: 'compressed',
@@ -71,13 +74,80 @@ function updataImg() {
                         filePath: item,
                         header: { 'token': token },
                         success: (r) => {
-                            let imgObj = JSON.parse(r.data).body;
-                            imgArr.push({
-                                imgPath: item,
-                                imgObj: imgObj[0].url
-                            })
-                            if (res.tempFilePaths.length === imgArr.length) {
-                                resolve(imgArr)
+                            uni.hideLoading();
+                            let resolveData = JSON.parse(r.data)
+                            if (resolveData.code === -100) {
+                                uni.showModal({
+                                    title: '提示',
+                                    content: resolveData.msg,
+                                    showCancel: false,
+                                    confirmText: '返回登录',
+                                    success: function () {
+                                        uni.reLaunch({
+                                            url: "/pages/page/login"
+                                        })
+                                    }
+                                });
+                            } else {
+                                let imgObj = JSON.parse(r.data).body;
+                                imgArr.push({
+                                    imgPath: item,
+                                    imgObj: imgObj[0].url
+                                })
+                                if (res.tempFilePaths.length === imgArr.length) {
+                                    resolve(imgArr)
+                                }
+                            }
+
+                        },
+                        fail: () => {
+                            uni.hideLoading();
+                        }
+
+                    });
+                })
+
+            },
+            fail: () => {
+                uni.hideLoading();
+                reject(false)
+            }
+        })
+    })
+}
+// 上传一张图片
+function updataImgOnce() {
+    return new Promise((resolve, reject) => {
+        uni.chooseImage({
+            count: 1,
+            sizeType: 'compressed',
+            success: res => {
+                res.tempFilePaths.forEach(item => {
+                    uni.uploadFile({
+                        url: http + '/wechatUpload/picture',
+                        name: 'file',
+                        filePath: item,
+                        header: { 'token': token },
+                        success: (r) => {
+                            let resolveData = JSON.parse(r.data);
+                            if (resolveData.code === -100) {
+                                uni.showModal({
+                                    title: '提示',
+                                    content: resolveData.msg,
+                                    showCancel: false,
+                                    confirmText: '返回登录',
+                                    success: function () {
+                                        uni.reLaunch({
+                                            url: "/pages/page/login"
+                                        })
+                                    }
+                                });
+                            } else {
+                                let imgObj = JSON.parse(r.data).body;
+                                resolve({
+                                    imgPath: item,
+                                    imgObj: imgObj[0].url
+                                })
                             }
                         }
                     });
@@ -89,7 +159,6 @@ function updataImg() {
             }
         })
     })
-
 }
 // 上传视频
 function updataVideo() {
@@ -127,5 +196,6 @@ module.exports = {
     updataImg,
     updataVideo,
     objAss,
+    updataImgOnce,
     _,
 }

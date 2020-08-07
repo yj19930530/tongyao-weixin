@@ -6,7 +6,7 @@
           <image class="sfz-img-style" v-if="faceImg===''" src="../../../static/face.png"></image>
           <image class="sfz-img-style" v-else :src="faceImg" @tap="_previewImage(faceImg)"></image>
           <view class="fl-cen update-btn" v-if="faceImg===''">
-            <text class="fc-fff fz-14">上传身份证正面</text>
+            <text class="fc-fff fz-14">没有图片</text>
           </view>
           <view class="fl-cen update-btn" v-else @tap="_previewImage(faceImg)">
             <text class="fc-fff fz-14">查看</text>
@@ -16,7 +16,7 @@
           <image class="sfz-img-style" v-if="backImg===''" src="../../../static/blck.png"></image>
           <image class="sfz-img-style" v-else :src="backImg" @tap="_previewImage(backImg)"></image>
           <view class="fl-cen update-btn" v-if="backImg===''">
-            <text class="fc-fff fz-14">上传身份证反面</text>
+            <text class="fc-fff fz-14">没有图片</text>
           </view>
           <view class="fl-cen update-btn" v-else @tap="_previewImage(backImg)">
             <text class="fc-fff fz-14">查看</text>
@@ -30,16 +30,13 @@
         v-model="form.name"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
-        placeholder-class="fc-999"
       />
     </view>
     <picker name="sex" disabled :value="form.sex" :range="array">
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">主贷人性别</text>
         <view class="fl-acen mr-r-30">
-          <view class="uni-input fz-14 fc-999" v-if="form.sex===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{form.sex}}</view>
+          <view class="uni-input fz-14">{{form.sex==='1'?'男':'女'}}</view>
         </view>
       </view>
     </picker>
@@ -49,8 +46,6 @@
         v-model="form.registerAddress"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -59,8 +54,6 @@
         v-model="form.liveAddress"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -69,9 +62,7 @@
         v-model="form.idNo"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
         type="idcard"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -80,8 +71,6 @@
         v-model="form.idOffice"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -90,8 +79,6 @@
         v-model="form.idAddress"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -100,9 +87,7 @@
         v-model="form.bankNo"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
         type="number"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -111,9 +96,7 @@
         v-model="form.mblNo"
         disabled
         class="uni-input for-item-input fz-14 mr-r-30"
-        placeholder="请输入"
         type="number"
-        placeholder-class="fc-999"
       />
     </view>
     <view class="sfz-form-item fl-bt">
@@ -142,6 +125,7 @@
     </view>
     <view class="heng-box-style"></view>
     <picker
+      disabled
       name="relationType"
       @change="bindPickerRela"
       :value="form.relationType"
@@ -151,14 +135,13 @@
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">与主贷人关系</text>
         <view class="fl-acen mr-r-30">
-          <view class="uni-input fz-14 fc-999" v-if="form.relationType===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{relationName}}</view>
-          <text class="iconfont icon-youjiantou fc-999"></text>
+          <view class="uni-input fz-14">{{relationName}}</view>
         </view>
       </view>
     </picker>
     <picker
       name="loanType"
+      disabled
       @change="bindPickerLoan"
       :value="form.loanType"
       :range="loanList"
@@ -167,9 +150,7 @@
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">偿还关系</text>
         <view class="fl-acen mr-r-30">
-          <view class="uni-input fz-14 fc-999" v-if="form.loanType===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{loanName}}</view>
-          <text class="iconfont icon-youjiantou fc-999"></text>
+          <view class="uni-input fz-14">{{loanName}}</view>
         </view>
       </view>
     </picker>
@@ -227,10 +208,10 @@ export default {
       return this.getDate("end");
     },
   },
-  onLoad(data) {
+  async onLoad(data) {
     this.lsId = data.id;
     this.itemIndexd = data.index;
-    this.getDicList();
+    await this.getDicList();
     this.getDetails();
   },
   methods: {
@@ -259,14 +240,20 @@ export default {
         .then((res) => {
         const data = res.body.applyInfo;
         this.form = data.relationCust[this.itemIndexd];
-        this.faceImg = this.form.idPostive[0].url;
-        this.backImg = this.form.idBack[0].url;
-        this.shouImg = this.form.sqFile[0].url;
+        try{
+          this.faceImg = this.form.idPostive[0].url;
+          this.backImg = this.form.idBack[0].url;
+          this.shouImg = this.form.sqFile[0].url;
+        }catch{
+          
+        }
         if(this.form.idEndTime===''||this.form.idEndTime===null){
             this.isck = true;
-          }
+        }
         this.relationName = this.getDicRe(this.relaList,this.form.relationType);
         this.loanName = this.getDicRe(this.loanList,this.form.loanType);
+        this.form.idEndTime = this.form.idEndTime.split(' ')[0];
+        this.form.idStartTime = this.form.idStartTime.split(' ')[0];
         });
     },
     getDicRe(list,type){

@@ -40,7 +40,7 @@
         <view class="fl-acen mr-r-30">
           <view class="fl-acen">
             <view class="uni-input fz-14 fc-999" v-if="form.businessType===''">请选择</view>
-            <view class="uni-input fz-14" v-else>{{form.businessType}}</view>
+            <view class="uni-input fz-14" v-else>{{businessName}}</view>
           </view>
           <text class="iconfont icon-youjiantou"></text>
         </view>
@@ -60,7 +60,6 @@
         <text class="fz-14 mr-r-30">元</text>
       </view>
     </view>
-
     <picker
       name="intentionTerm"
       @change="bindPickerInten"
@@ -73,7 +72,7 @@
         <view class="fl-acen mr-r-30">
           <view class="fl-acen">
             <view class="uni-input fz-14 fc-999" v-if="form.intentionTerm===''">请选择</view>
-            <view class="uni-input fz-14" v-else>{{form.intentionTerm}}</view>
+            <view class="uni-input fz-14" v-else>{{intentionName}}</view>
           </view>
           <text class="iconfont icon-youjiantou"></text>
         </view>
@@ -121,6 +120,8 @@ export default {
       editType: false,
       editId: 0,
       loanName: "",
+      businessName: "",
+      intentionName: "",
       rules: [
         {
           name: "loanType",
@@ -168,6 +169,14 @@ export default {
       if (formData) {
         this.form = formData;
         this.loanName = this.getDicRe(this.loanList, this.form.loanType);
+        this.businessName = this.getDicRe(
+          this.businessList,
+          this.form.businessType
+        );
+        this.intentionName = this.getDicRe(
+          this.intentionList,
+          this.form.intentionTerm
+        );
       }
     }
   },
@@ -191,6 +200,14 @@ export default {
           const data = res.body.applyInfo;
           this.form = common.objAss(this.form, res.body.applyInfo);
           this.loanName = this.getDicRe(this.loanList, this.form.loanType);
+          this.businessName = this.getDicRe(
+            this.businessList,
+            this.form.businessType
+          );
+          this.intentionName = this.getDicRe(
+            this.intentionList,
+            this.form.intentionTerm
+          );
         });
     },
     // 获取数据字典
@@ -262,10 +279,12 @@ export default {
       });
     },
     bindPickerBus(data) {
-      this.form.businessType = this.businessList[data.detail.value].name;
+      this.form.businessType = this.businessList[data.detail.value].value;
+      this.businessName = this.businessList[data.detail.value].name;
     },
     bindPickerInten(data) {
-      this.form.intentionTerm = this.intentionList[data.detail.value].name;
+      this.form.intentionTerm = this.intentionList[data.detail.value].value;
+      this.intentionName = this.intentionList[data.detail.value].name;
     },
   },
 };

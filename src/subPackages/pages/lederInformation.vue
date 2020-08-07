@@ -40,12 +40,12 @@
         placeholder-class="fc-999"
       />
     </view>
-    <picker name="sex" @change="bindPickerChange" :value="form.sex" :range="array">
+    <picker name="sex" @change="bindPickerChange" :value="form.sex" :range="array" range-key="name">
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">主贷人性别</text>
         <view class="fl-acen mr-r-30">
           <view class="uni-input fz-14 fc-999" v-if="form.sex===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{form.sex}}</view>
+          <view class="uni-input fz-14" v-else>{{sexName}}</view>
           <text class="iconfont icon-youjiantou fc-999"></text>
         </view>
       </view>
@@ -207,11 +207,17 @@
 <script>
 import { toast } from "../../utils";
 const graceChecker = require("../../utils/graceChecker");
-const { updataImg } = require("../../utils/lib/common.js");
+const { updataImgOnce } = require("../../utils/lib/common.js");
 export default {
   data() {
     return {
-      array: ["男", "女"],
+      array: [{
+          name:'男',
+          value:'1'
+      }, {
+          name:'女',
+          value:'0'
+      }],
       form: {
         liveAddress: "", // 居住地址
         name: "", // 姓名
@@ -296,7 +302,8 @@ export default {
       ],
       relaList: [],
       loanList: [],
-      pageIndex:0
+      pageIndex:0,
+      sexName:''
     };
   },
   computed: {
@@ -318,6 +325,7 @@ export default {
       this.shouImg = data.imgOBj.shouImg;
       this.relationName = this.getDicRe(this.relaList,this.form.relationType);
       this.loanName = this.getDicRe(this.loanList,this.form.loanType);
+      this.sexName = this.getDicRe(this.array,this.form.sex)
     }
   },
   methods: {
@@ -386,15 +394,17 @@ export default {
       }
     },
     async updataImgZheng(type) {
-      const data = await updataImg();
+      const data = await updataImgOnce();
       let sfzType = "";
       // const sfzType = type;
       if (type === "front") {
         // this.faceImg = data.imgPath;
-        sfzType = `{"side":"face"}`;
+        // sfzType = `{"side":"face"}`;
+        sfzType = `front`;
       } else {
         // this.backImg = data.imgPath;
-        sfzType = `{"side":"back"}`;
+        // sfzType = `{"side":"back"}`;
+        sfzType = `back`;
       }
       uni.getFileSystemManager().readFile({
         encoding: "base64",
@@ -403,17 +413,17 @@ export default {
           toast.showLoading('上传中');
           uni.request({
             method: "POST",
-            // url: "https://yixi.market.alicloudapi.com/ocr/idcardocr",
-            url: "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json",
+            url: "https://yixi.market.alicloudapi.com/ocr/idcardocr",
+            // url: "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json",
             data: {
               image: res.data,
-              configure: sfzType,
-              // side: sfzType,
+              // configure: sfzType,
+              side: sfzType,
             },
             header: {
-              // Authorization: "APPCODE dcc12e102b9443008946ffd30e69a84c",
-              // "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-              Authorization: "APPCODE 8a2c3244c30b431db3b8e6e398f37670",
+              Authorization: "APPCODE dcc12e102b9443008946ffd30e69a84c",
+              "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+              // Authorization: "APPCODE 8a2c3244c30b431db3b8e6e398f37670",
             },
             success: (res) => {
               const objData = res.data;
@@ -421,17 +431,22 @@ export default {
                 if (type === "front") {
                   this.faceImg = data.imgPath;
                   this.form.idPostive = data.imgObj;
-                  this.form.name = objData.name;
-                  this.form.idNo = objData.num;
-                  this.form.sex = objData.sex;
-                  this.form.idAddress = objData.address;
+                  this.form.name = objData.data.name;
+                  this.form.idNo = objData.data.idcard;
+                  this.sexName = objData.data.gender;
+                  if(objData.data.gender==='男'){
+                    this.form.sex = "1";
+                  }else{
+                    this.form.sex = "0";
+                  }
+                  this.form.idAddress = objData.data.address;
                 } else {
                   this.backImg = data.imgPath;
                   this.form.idBack = data.imgObj;
-                  this.form.idStartTime = this.timeText(objData.start_date);
-                  this.form.idEndTime = this.timeText(objData.end_date);
-                  this.endTime = this.timeText(objData.end_date);
-                  this.form.idOffice = objData.issue;
+                  this.form.idStartTime = this.timeText(objData.data.start_date);
+                  this.form.idEndTime = this.timeText(objData.data.end_date);
+                  this.endTime = this.timeText(objData.data.end_date);
+                  this.form.idOffice = objData.data.jiguan;
                 }
               } else {
                 toast.showToast("请上传正确的身份证照片");
@@ -454,13 +469,14 @@ export default {
     },
     async uploadBook() {
       toast.showLoading('上传中');
-      let data = await updataImg();
+      let data = await updataImgOnce();
       this.form.sqFile = data.imgObj;
       this.shouImg = data.imgPath;
       uni.hideLoading();
     },
     bindPickerChange(data) {
-      this.form.sex = this.array[data.detail.value];
+      this.form.sex = this.array[data.detail.value].value;
+      this.sexName = this.array[data.detail.value].name;
     },
     bindPickerRela(data) {
       this.relaList.forEach((item,index)=>{

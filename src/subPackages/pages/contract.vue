@@ -40,6 +40,13 @@ export default {
     this.custId = obj.id;
   },
   methods: {
+    // 预览图片
+    _previewImage(img) {
+      uni.previewImage({
+        urls: [img],
+        current: img,
+      });
+    },
     submitForm() {
       if (this.mp4Info === "") return toast.showToast("请上传视频");
       if (this.dcbcImg === "") return toast.showToast("请上传合同资料");

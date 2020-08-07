@@ -10,7 +10,8 @@ switch (env) {
         break;
     }
     default: {
-        http = 'http://47.92.74.122/tycar';
+        http = 'https://www.ja-zc.com/tycar';
+        // http = 'http://47.92.74.122/tycar';
         break;
     }
 }

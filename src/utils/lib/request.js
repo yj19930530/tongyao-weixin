@@ -58,7 +58,7 @@ uniRequest._extend({
                         }
                     }
                 },
-                error: err => {
+                fail: err => {
                     reject(err)
                 }
             })
