@@ -1,5 +1,5 @@
 <template>
-  <view class="business-lsit-box">
+  <view class="business-lsit-box" @tap="lookDdian2(itemObj)">
     <text class="fz-12 fc999 mr-l-40">2020-07-19 19：27</text>
     <view class="business-box-card">
       <div class="card-content fl-fo">
@@ -27,21 +27,21 @@
             <text class="fz-15 mr-b-10">{{itemObj.processName}}</text>
             <view
               class="fl-cen item-look-details mr-l-20"
-              @tap="lookDdian(itemObj.dhId)"
+              @tap.native.stop="lookDdian(itemObj.dhId)"
               v-if="itemObj.process==='sale_sure'"
             >
               <text class="fz-11 fc-fff">查看</text>
             </view>
             <view
               class="fl-cen item-look-details mr-l-20"
-              @tap="findDian(itemObj)"
+              @tap.native.stop="findDian(itemObj)"
               v-if="itemObj.process==='frist_examine'"
             >
               <text class="fz-11 fc-fff">访查</text>
             </view>
             <view
               class="fl-cen item-look-details3 mr-l-20"
-              @tap="findContract(itemObj.custId)"
+              @tap.native.stop="findContract(itemObj.custId)"
               v-if="itemObj.contractState===0"
             >
               <text class="fz-11 fc-fff">合同补充</text>
@@ -52,7 +52,7 @@
           <div
             class="back-dan fl-cen"
             v-if="itemObj.process==='sale_sure'"
-            @tap="deleteOrder(itemObj.id)"
+            @tap.native.stop="deleteOrder(itemObj.id)"
           >
             <text class="fz-13 fc-999">退单</text>
           </div>
@@ -65,11 +65,11 @@
           <div
             class="back-dan fl-cen"
             v-if="itemObj.process==='wait'"
-            @tap="editOrderFuc(itemObj.id)"
+            @tap.native.stop="editOrderFuc(itemObj.id)"
           >
             <text class="fz-13 fc-999">修改订单</text>
           </div>
-          <div class="back-dan fl-cen" v-if="itemObj.process==='wait'" @tap="submitOrder(itemObj)">
+          <div class="back-dan fl-cen" v-if="itemObj.process==='wait'" @tap.native.stop="submitOrder(itemObj)">
             <text class="fz-13 fc-999">提交订单</text>
           </div>
         </view>
@@ -91,6 +91,11 @@ export default {
   },
   mounted() {},
   methods: {
+    lookDdian2(row) {
+      uni.navigateTo({
+        url: `/subPackages/pages/addOrders?type=details&lsId=${row.id}&custId=${row.custId}`,
+      });
+    },
     resetOrders(row) {
       toast.showLoading("刷新中");
       this.$api

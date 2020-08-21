@@ -2,11 +2,13 @@
   <view class="detail-content">
     <view class="fl-bt detail-item-content">
       <view class="mr-l-30 fz-15 item-left">GPS安装:</view>
-      <view class="mr-r-30 fz-14 item-right">{{dataDet.gps_info||'-'}}</view>
+      <view class="mr-r-30 fz-14 item-right">{{gpsData(dataDet.gps_info)}}</view>
     </view>
     <view class="fl-bt detail-item-content">
       <view class="mr-l-30 fz-15 item-left">类型:</view>
-      <view class="mr-r-30 fz-14 item-right">{{dataDet.isOldCar||'-'}}</view>
+      <view
+        class="mr-r-30 fz-14 item-right"
+      >{{dataDet.isOldCar===1?'二手车':dataDet.isOldCar===0?'新车':'-'}}</view>
     </view>
     <view v-if="isOldCar===1">
       <view class="fl-bt detail-item-content">
@@ -192,20 +194,34 @@ export default {
   onLoad(data) {
     this.dataDet = JSON.parse(data.det);
   },
-  methods: {},
+  methods: {
+    gpsData(text) {
+      let textArr = text.split("");
+      let textStr = "";
+      textArr.forEach((item) => {
+        if (item === "1") {
+          textStr += "有线,";
+        }
+        if (item === "2") {
+          textStr += "无线";
+        }
+      });
+      return textStr;
+    },
+  },
 };
 </script>
 <style scoped>
 .detail-item-content {
-    padding: 20rpx 0;
-    background-color: #ffffff;
+  padding: 20rpx 0;
+  background-color: #ffffff;
 }
 .item-left {
-    width: 50%;
+  width: 50%;
 }
 .item-right {
-    width: 30%;
-    display: flex;
-    justify-content: flex-end;
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

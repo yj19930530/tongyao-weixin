@@ -26,7 +26,7 @@
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">性别</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.custSex||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{getDicRe(array,detailsObj.custSex)}}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">身份证号码</text>
@@ -68,7 +68,7 @@
     </view>
     <view class="form-input-eart mr-t-20">
       <text class="fz-15 mr-l-30">电核补充说明</text>
-      <textarea v-model="datailsObj.remark" maxlength="300" disabled class="textarea-style fz-14" />
+      <textarea v-model="detailsObj.remark" maxlength="300" disabled class="textarea-style fz-14" />
     </view>
     <view class="cofim-btn fl-cen" @tap="dhconfimFunc">
       <text class="fz-20 fc-fff">确认通过</text>
@@ -84,6 +84,16 @@ export default {
       detailsObj: {},
       zxText: "",
       cancellation_reasons: "",
+      array: [
+        {
+          name: "男",
+          value: "1",
+        },
+        {
+          name: "女",
+          value: "0",
+        },
+      ],
     };
   },
   onLoad(data) {
@@ -91,6 +101,15 @@ export default {
     this.getDetails();
   },
   methods: {
+    getDicRe(list, type) {
+      let text = "";
+      list.forEach((item) => {
+        if (item.value === type) {
+          text = item.name;
+        }
+      });
+      return text;
+    },
     dhconfimFunc() {
       this.$api
         .comfimDh({
