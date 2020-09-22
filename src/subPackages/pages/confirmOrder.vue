@@ -113,7 +113,7 @@ export default {
     dhconfimFunc() {
       this.$api
         .comfimDh({
-          id: this.detailsObj.id,
+          orderId: this.detailsObj.orderId,
         })
         .then((res) => {
           if (res.code === 0) {

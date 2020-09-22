@@ -41,9 +41,14 @@ export default {
       title: "分享",
     });
   },
-  onShow(){
+  async onShow(){
+    this.pageNo = 1;
+    this.pageSize = 10;
     this.chiType = false;
-    this.getOrdersData();
+    this.isMore = false;
+    toast.showLoading("加载中");
+    await this.getOrdersData();
+    uni.hideLoading();
   },
   async onPullDownRefresh() {
     this.pageNo = 1;

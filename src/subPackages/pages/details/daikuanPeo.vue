@@ -200,7 +200,11 @@ export default {
           this.form.idStartTime = this.form.idStartTime.split(' ')[0];
           this.faceImg = this.form.idPostive[0].url;
           this.backImg = this.form.idBack[0].url;
-          this.shouImg = this.form.sqFile[0].url;
+          try{
+             this.shouImg = this.form.sqFile[0].url;
+          }catch{
+            console.log('err')
+          }
           if(this.form.idEndTime===''||this.form.idEndTime===null){
             this.isck = true;
           }

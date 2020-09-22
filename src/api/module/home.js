@@ -25,6 +25,8 @@ const comfimDh = (data) => postRequest('/busProcess/nextProcess', data);
 const visitSet = (data) => postRequest('/busDh/changeDhState', data);
 // 提交订单
 const confimOrderItem = (data) => postRequest('/busOrder/confirm', data);
+// 垫款
+const sendPayment = (data) => postRequest('/busPayment/sendPayment', data);
 module.exports = {
     getOrderList,
     userLogin,
@@ -38,5 +40,6 @@ module.exports = {
     comfimDh,
     visitSet,
     getOtherImg,
-    confimOrderItem
+    confimOrderItem,
+    sendPayment
 }

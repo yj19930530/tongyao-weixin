@@ -65,7 +65,7 @@ export default {
     },
     // 获取数据字典
     async getDicList() {
-      this.loanList = await this.getDicData(9);
+      this.loanList = await this.getDicData(8);
       this.businessList = await this.getDicData(10);
       this.intentionList = await this.getDicData(11);
       this.loanName = this.getDicRe(this.loanList, this.form.loanType);

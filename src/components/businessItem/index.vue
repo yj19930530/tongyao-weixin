@@ -8,7 +8,7 @@
             <view class="left-text-style">订单号：</view>
             <text>{{itemObj.orderNum}}</text>
           </view>
-          <view class="fl-cen" @tap="resetOrders(itemObj)">
+          <view class="fl-cen" @tap.native.stop="resetOrders(itemObj)">
             <text class="fz-12 fc-009">刷新订单</text>
             <text class="iconfont icon-shuaxin fz-20 fc-009"></text>
           </view>
@@ -56,11 +56,26 @@
           >
             <text class="fz-13 fc-999">退单</text>
           </div>
-          <div class="back-dan fl-cen" v-if="itemObj.paymentState===0">
-            <text class="fz-13 fc-999">自垫款</text>
+          <div
+            class="back-dan2 fl-cen"
+            v-if="itemObj.paymentState===-1"
+            @tap.native.stop="senOwnerKuan(itemObj)"
+          >
+            <text class="fz-13 fc-999">自垫款请返利</text>
           </div>
-          <div class="back-dan fl-cen" v-if="itemObj.paymentStateRebate===0">
-            <text class="fz-13 fc-999">请返利</text>
+          <div
+            class="back-dan2 fl-cen"
+            @tap.native.stop="senCarKuan(itemObj)"
+            v-if="itemObj.paymentStateRebate===-1"
+          >
+            <text class="fz-13 fc-999">自垫款请车款</text>
+          </div>
+          <div
+            class="back-dan2 fl-cen"
+            @tap.native.stop="senFanKuan(itemObj)"
+            v-if="itemObj.paymentStateRebate===-1&&itemObj.paymentState===-1"
+          >
+            <text class="fz-13 fc-999">公司垫款请返利</text>
           </div>
           <div
             class="back-dan fl-cen"
@@ -69,7 +84,11 @@
           >
             <text class="fz-13 fc-999">修改订单</text>
           </div>
-          <div class="back-dan fl-cen" v-if="itemObj.process==='wait'" @tap.native.stop="submitOrder(itemObj)">
+          <div
+            class="back-dan fl-cen"
+            v-if="itemObj.process==='wait'"
+            @tap.native.stop="submitOrder(itemObj)"
+          >
             <text class="fz-13 fc-999">提交订单</text>
           </div>
         </view>
@@ -161,6 +180,88 @@ export default {
         url: `/subPackages/pages/visit?custCode=${row.custCode}&id=${row.custId}`,
       });
     },
+    // 自垫款
+    senOwnerKuan(row) {
+      let that = this;
+      uni.showModal({
+        title: "提示",
+        content: "是否确认自垫款",
+        confirmText: "确认",
+        confirmColor: "#0090D9",
+        success: function (res) {
+          if (res.confirm) {
+            that.$api
+              .sendPayment({
+                advancesType: 2,
+                custCode: row.custCode,
+                state: 0,
+              })
+              .then((res) => {
+                if (res.code === 0) {
+                  toast.showToast("确定成功");
+                  that.$emit("tableList");
+                } else {
+                  toast.showToast("确定失败");
+                }
+              });
+          }
+        },
+      });
+    },
+    senCarKuan(row) {
+      let that = this;
+      uni.showModal({
+        title: "提示",
+        content: "是否确认请车款",
+        confirmText: "确认",
+        confirmColor: "#0090D9",
+        success: function (res) {
+          if (res.confirm) {
+            that.$api
+              .sendPayment({
+                advancesType: 2,
+                stateRebate: 0,
+                custCode: row.custCode,
+              })
+              .then((res) => {
+                if (res.code === 0) {
+                  toast.showToast("确定成功");
+                  that.$emit("tableList");
+                } else {
+                  toast.showToast("确定失败");
+                }
+              });
+          }
+        },
+      });
+    },
+    senFanKuan(row) {
+      let that = this;
+      uni.showModal({
+        title: "提示",
+        content: "是否确认自返利",
+        confirmText: "确认",
+        confirmColor: "#0090D9",
+        success: function (res) {
+          if (res.confirm) {
+            that.$api
+              .sendPayment({
+                advancesType: 1,
+                stateRebate: 0,
+                custCode: row.custCode,
+              })
+              .then((res) => {
+                if (res.code === 0) {
+                  toast.showToast("确定成功");
+                  that.$emit("tableList");
+                } else {
+                  toast.showToast("确定失败");
+                }
+              });
+          }
+        },
+      });
+    },
   },
 };
 </script>
@@ -209,6 +310,14 @@ business-lsit-box {
   margin-top: 20rpx;
   margin-left: 14rpx;
   width: 146rpx;
+  height: 60rpx;
+  border: 1px solid #999999;
+  border-radius: 60rpx;
+}
+.back-dan2 {
+  margin-top: 20rpx;
+  margin-left: 14rpx;
+  width: 186rpx;
   height: 60rpx;
   border: 1px solid #999999;
   border-radius: 60rpx;

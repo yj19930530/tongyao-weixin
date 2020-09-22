@@ -203,7 +203,7 @@ export default {
           textStr += "有线,";
         }
         if (item === "2") {
-          textStr += "无线";
+          textStr += "无线,";
         }
       });
       return textStr;

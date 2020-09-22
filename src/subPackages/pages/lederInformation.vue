@@ -104,7 +104,6 @@
     <view class="sfz-form-item fl-bt">
       <text class="fz-15 fz-14 mr-l-30">银行卡号</text>
       <input
-        name="bankNo"
         v-model="form.bankNo"
         class="uni-input for-item-input fz-14 mr-r-30"
         placeholder="请输入"
@@ -280,11 +279,6 @@ export default {
           errorMsg: "请输入身份证地址",
         },
         {
-          name: "bankNo",
-          checkType: "notnull",
-          errorMsg: "请输入银行卡号",
-        },
-        {
           name: "mblNo",
           checkType: "phoneno",
           errorMsg: "请输入正确的电话号码",
@@ -362,7 +356,7 @@ export default {
       if (this.backImg === "") return toast.showToast("请上传身份证反面");
       const val = graceChecker.check(this.form, this.rules);
       if (val) {
-        if (this.shouImg === "") return toast.showToast("请上传授权书");
+        // if (this.shouImg === "") return toast.showToast("请上传授权书");
         uni.setStorageSync(`leder${this.pageIndex}`, {
           index: this.pageIndex,
           form: this.form,

@@ -1,7 +1,6 @@
 // 常用方法
 const _ = require('underscore');
 const { http } = require('../../config/develop');
-const token = getData('token');
 /**
  * 对象合并
  * @param target object 继承目标
@@ -58,6 +57,7 @@ function getData(key) {
 }
 // 上传图片
 function updataImg() {
+    const token = getData('token');
     return new Promise((resolve, reject) => {
         uni.showLoading({
             title: '上传中'
@@ -74,6 +74,7 @@ function updataImg() {
                         filePath: item,
                         header: { 'token': token },
                         success: (r) => {
+                            console.log(r)
                             uni.hideLoading();
                             let resolveData = JSON.parse(r.data)
                             if (resolveData.code === -100) {
@@ -117,6 +118,7 @@ function updataImg() {
 }
 // 上传一张图片
 function updataImgOnce() {
+    const token = getData('token');
     return new Promise((resolve, reject) => {
         uni.chooseImage({
             count: 1,
@@ -162,6 +164,7 @@ function updataImgOnce() {
 }
 // 上传视频
 function updataVideo() {
+    const token = getData('token');
     return new Promise((resolve, reject) => {
         uni.chooseVideo({
             count: 1,
