@@ -1,29 +1,37 @@
 <template>
   <view id="home-page-container">
     <view class="home-top-content">
-      <image class="homg-back-img" src="../../static/home.png"></image>
+      <image
+        class="homg-back-img"
+        mode="aspectFit"
+        src="../../static/home.png"
+      ></image>
       <view class="top-search-box">
         <text class="fz-18 fc-fff fw-bold">成都通耀汽车业务管理系统</text>
       </view>
     </view>
     <view class="home-business-lsit fl-co" v-if="chiType">
       <businessItem
-        v-for="(item,index) in tableList"
+        v-for="(item, index) in tableList"
         :key="index"
         @tableList="getOrdersData"
         @retOrders="retOrders"
         :itemObj="item"
+        :loanData ="loanList"
       />
     </view>
-    <view class="fl-cen mr-t-30" v-if="total===0">
+    <view class="fl-cen mr-t-30" v-if="total === 0">
       <text class="fz-14 fc-999">没有更多</text>
     </view>
-    <div class="iconfont icon-tianjia fz-50 add-order-btn fc-009" @tap="addOrders"></div>
+    <div
+      class="iconfont icon-tianjia fz-50 add-order-btn fc-009"
+      @tap="addOrders"
+    ></div>
   </view>
 </template>
 <script>
 const api = require("../../api/module/home.js");
-const { toast,common } = require("../../utils/index.js");
+const { toast, common } = require("../../utils/index.js");
 export default {
   data() {
     return {
@@ -32,7 +40,8 @@ export default {
       isMore: true,
       tableList: [],
       total: 0,
-      chiType: false
+      chiType: false,
+      loanList: [],
     };
   },
   onLoad() {
@@ -41,13 +50,14 @@ export default {
       title: "分享",
     });
   },
-  async onShow(){
+  async onShow() {
     this.pageNo = 1;
     this.pageSize = 10;
     this.chiType = false;
     this.isMore = false;
     toast.showLoading("加载中");
     await this.getOrdersData();
+    await this.getDicList();
     uni.hideLoading();
   },
   async onPullDownRefresh() {
@@ -73,17 +83,28 @@ export default {
     uni.hideLoading();
   },
   methods: {
-    retOrders(row,id){
-      this.tableList.forEach((item,index)=>{
-        if(item.id ===id){
-          for(let key in row){
+    // 获取数据字典
+    async getDicList() {
+      this.loanList = await this.getDicData(8);
+    },
+    async getDicData(id) {
+      const { body } = await this.$api.getDic({
+        catalogId: id,
+      });
+      return body.list;
+    },
+    retOrders(row, id) {
+      this.tableList.forEach((item, index) => {
+        if (item.id === id) {
+          for (let key in row) {
             this.tableList[index][key] = row[key];
           }
         }
-      })
+      });
     },
     // 获取订单列表
     getOrdersData() {
+      let regex = /\（(.+?)\）/;
       this.$api
         .getOrderList({
           pageNo: this.pageNo,

@@ -3,8 +3,8 @@
     <view class="sfz-container">
       <view class="fl-bt">
         <view class="fl-fo">
-          <image class="sfz-img-style" v-if="faceImg===''" src="../../../static/face.png"></image>
-          <image class="sfz-img-style" v-else :src="faceImg" @tap="_previewImage(faceImg)"></image>
+          <image class="sfz-img-style" mode="aspectFill" v-if="faceImg===''" src="../../../static/face.png"></image>
+          <image class="sfz-img-style" mode="aspectFill" v-else :src="faceImg" @tap="_previewImage(faceImg)"></image>
           <view class="fl-cen update-btn" v-if="faceImg===''">
             <text class="fc-fff fz-14">没有图片</text>
           </view>
@@ -13,8 +13,8 @@
           </view>
         </view>
         <view class="fl-fo">
-          <image class="sfz-img-style" v-if="backImg===''" src="../../../static/blck.png"></image>
-          <image class="sfz-img-style" v-else :src="backImg" @tap="_previewImage(backImg)"></image>
+          <image class="sfz-img-style" mode="aspectFill" v-if="backImg===''" src="../../../static/blck.png"></image>
+          <image class="sfz-img-style" mode="aspectFill" v-else :src="backImg" @tap="_previewImage(backImg)"></image>
           <view class="fl-cen update-btn" v-if="backImg===''">
             <text class="fc-fff fz-14">没有图片</text>
           </view>
@@ -160,7 +160,7 @@
         <text class="fz-14 fc-999">授权书</text>
       </view>
       <view class="img-box-shou mr-l-30" v-else>
-        <image class="book-img" :src="shouImg" @tap="_previewImage(shouImg)" />
+        <image class="book-img" mode="aspectFill" :src="shouImg" @tap="_previewImage(shouImg)" />
       </view>
     </view>
   </view>

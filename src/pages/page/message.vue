@@ -7,7 +7,12 @@
       </view>
     </view>
     <view class="fl-co mr-t-20">
-      <messageItem v-for="(item,index) in tableList" :key="index" :objItem="item" />
+      <messageItem
+        v-for="(item, index) in tableList"
+        :key="index"
+        :objItem="item"
+        :loanData ="loanList"
+      />
     </view>
   </view>
 </template>
@@ -22,10 +27,12 @@ export default {
       isMore: true,
       tableList: [],
       total: 0,
+      loanList:[]
     };
   },
   onLoad() {
     this.getOrdersData();
+    this.getDicList();
   },
   async onPullDownRefresh() {
     this.pageNo = 1;
@@ -49,6 +56,16 @@ export default {
     uni.hideLoading();
   },
   methods: {
+    // 获取数据字典
+    async getDicList() {
+      this.loanList = await this.getDicData(8);
+    },
+    async getDicData(id) {
+      const { body } = await this.$api.getDic({
+        catalogId: id,
+      });
+      return body.list;
+    },
     // 获取订单列表
     getOrdersData() {
       this.$api

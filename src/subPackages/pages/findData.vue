@@ -1,7 +1,12 @@
 <template>
   <view id="message-container">
     <view class="fl-co mr-t-20" v-if="tableList.length">
-      <messageItem v-for="(item,index) in tableList" :key="index" :objItem="item" />
+      <messageItem
+        v-for="(item, index) in tableList"
+        :key="index"
+        :objItem="item"
+        :loanData="loanList"
+      />
     </view>
     <view v-else class="fl-cen mr-t-50">
       <text class="fz-12 fc-999">没有更多</text>
@@ -23,6 +28,7 @@ export default {
       endTime: "",
       process: "",
       searchInfo: "",
+      loanList: [],
     };
   },
   onLoad(data) {
@@ -32,6 +38,7 @@ export default {
     this.process = searData.process;
     this.searchInfo = searData.searchInfo;
     this.getOrdersData();
+    this.getDicList();
   },
   async onPullDownRefresh() {
     this.pageNo = 1;
@@ -55,6 +62,16 @@ export default {
     uni.hideLoading();
   },
   methods: {
+    // 获取数据字典
+    async getDicList() {
+      this.loanList = await this.getDicData(8);
+    },
+    async getDicData(id) {
+      const { body } = await this.$api.getDic({
+        catalogId: id,
+      });
+      return body.list;
+    },
     // 获取订单列表
     getOrdersData() {
       this.$api
