@@ -49,6 +49,7 @@ uniRequest._extend({
                                     })
                                 }
                             });
+                            uni.hideLoading();
                             break
                         }
                         default: {

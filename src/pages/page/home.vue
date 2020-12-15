@@ -104,7 +104,6 @@ export default {
     },
     // 获取订单列表
     getOrdersData() {
-      let regex = /\（(.+?)\）/;
       this.$api
         .getOrderList({
           pageNo: this.pageNo,

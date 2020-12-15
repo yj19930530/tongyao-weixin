@@ -34,10 +34,10 @@ export default {
   data() {
     return {
       form: {
-        userName: "ywytest",
-        password: "111111",
-        // userName: "",
-        // password: "",
+        // userName: "ywytest",
+        // password: "111111",
+        userName: "",
+        password: "",
       },
       loginLoading: false,
     };

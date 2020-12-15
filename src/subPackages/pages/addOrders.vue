@@ -42,17 +42,18 @@
         </view>
       </view>
       <view
-        class="fl-bt lin-hei2"
-        v-for="(item,index) in lederList"
+        v-for="(item, index) in lederList"
         :key="index"
-        @tap="lederItem(item.n)"
+        @tap.stop="lederItem(item.n)"
       >
-        <text class="mr-l-30 fz-13">第{{item.n}}共贷人</text>
-        <view class="fl-acen mr-r-30">
-          <span class="fz-13 fc-333" v-if="item.ifWrite">已填写</span>
-          <span class="fz-13 fc-999" v-else>未填写</span>
-          <span class="iconfont icon-youjiantou fz-13 fc-999"></span>
-        </view>
+        <div @longpress.stop="deleteItem(index)" class="fl-bt lin-hei2">
+          <text class="mr-l-30 fz-13">第{{ item.n }}共贷人</text>
+          <view class="fl-acen mr-r-30">
+            <span class="fz-13 fc-333" v-if="item.ifWrite">已填写</span>
+            <span class="fz-13 fc-999" v-else>未填写</span>
+            <span class="iconfont icon-youjiantou fz-13 fc-999"></span>
+          </view>
+        </div>
       </view>
     </view>
     <view class="order-item-box2 fl-foc" v-else>
@@ -61,11 +62,11 @@
       </view>
       <view
         class="fl-bt lin-hei2"
-        v-for="(item,index) in lederList"
+        v-for="(item, index) in lederList"
         :key="index"
-        @tap="toDetailsPath('gdr',item.n)"
+        @tap="toDetailsPath('gdr', item.n)"
       >
-        <text class="mr-l-30 fz-13">第{{item.n}}共贷人</text>
+        <text class="mr-l-30 fz-13">第{{ item.n }}共贷人</text>
         <view class="fl-acen mr-r-30">
           <span class="iconfont icon-youjiantou fz-13 fc-999"></span>
         </view>
@@ -77,15 +78,26 @@
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
     </view>-->
-    <view class="order-item-box fl-bt" v-if="ifDetails" @tap="toDetailsPath('img')">
+    <view
+      class="order-item-box fl-bt"
+      v-if="ifDetails"
+      @tap="toDetailsPath('img')"
+    >
       <text class="mr-l-30 fz-15">相关图片</text>
       <view class="fl-acen mr-r-30">
         <span class="iconfont icon-youjiantou fc-333"></span>
       </view>
     </view>
     <view class="fl btn-box" v-if="!ifDetails">
-      <view class="order-btn fl-cen left-btn-back" @tap="closeOrder">取消订单</view>
-      <view class="order-btn fl-cen right-btn-back" v-if="peoType&&loanType" @tap="submitOrder">提交订单</view>
+      <view class="order-btn fl-cen left-btn-back" @tap="closeOrder"
+        >取消订单</view
+      >
+      <view
+        class="order-btn fl-cen right-btn-back"
+        v-if="peoType && loanType"
+        @tap="submitOrder"
+        >提交订单</view
+      >
       <view class="order-btn fl-cen right-btn-back2" v-else>提交订单</view>
     </view>
   </view>
@@ -128,6 +140,27 @@ export default {
     }
   },
   methods: {
+    // 删除共贷人
+    deleteItem(i) {
+      let that = this;
+      uni.showModal({
+        title: "提示",
+        content: "是否删除",
+        success: function (res) {
+          if (res.confirm) {
+            that.lederList.splice(i, 1);
+            let num = 0;
+            that.lederList.forEach((item) => {
+              num++;
+              item.n = num;
+            });
+            uni.setStorageSync("lederList", that.lederList);
+          } else if (res.cancel) {
+            return;
+          }
+        },
+      });
+    },
     // 获取详情
     getDetails() {
       this.$api
