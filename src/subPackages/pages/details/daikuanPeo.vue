@@ -3,9 +3,20 @@
     <view class="sfz-container">
       <view class="fl-bt">
         <view class="fl-fo">
-          <image class="sfz-img-style" mode="aspectFill" v-if="faceImg===''" src="../../../static/face.png"></image>
-          <image class="sfz-img-style" mode="aspectFill" v-else :src="faceImg" @tap="_previewImage(faceImg)"></image>
-          <view class="fl-cen update-btn" v-if="faceImg===''">
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            v-if="faceImg === ''"
+            src="../../../static/face.png"
+          ></image>
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            v-else
+            :src="faceImg"
+            @tap="_previewImage(faceImg)"
+          ></image>
+          <view class="fl-cen update-btn" v-if="faceImg === ''">
             <text class="fc-fff fz-14">没有图片</text>
           </view>
           <view class="fl-cen update-btn" v-else @tap="_previewImage(faceImg)">
@@ -13,9 +24,20 @@
           </view>
         </view>
         <view class="fl-fo">
-          <image class="sfz-img-style" mode="aspectFill" v-if="backImg===''" src="../../../static/blck.png"></image>
-          <image class="sfz-img-style" mode="aspectFill" v-else :src="backImg" @tap="_previewImage(backImg)"></image>
-          <view class="fl-cen update-btn" v-if="backImg===''">
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            v-if="backImg === ''"
+            src="../../../static/blck.png"
+          ></image>
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            v-else
+            :src="backImg"
+            @tap="_previewImage(backImg)"
+          ></image>
+          <view class="fl-cen update-btn" v-if="backImg === ''">
             <text class="fc-fff fz-14">没有图片</text>
           </view>
           <view class="fl-cen update-btn" v-else @tap="_previewImage(backImg)">
@@ -36,7 +58,19 @@
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">主贷人性别</text>
         <view class="fl-acen mr-r-30">
-          <view class="uni-input fz-14">{{form.sex==='1'?'男':'女'}}</view>
+          <view class="uni-input fz-14">{{
+            form.sex === "1" ? "男" : "女"
+          }}</view>
+        </view>
+      </view>
+    </picker>
+    <picker name="sex" disabled :value="form.sex" :range="array">
+      <view class="sfz-form-item fl-bt">
+        <text class="fz-15 fz-14 mr-l-30">主贷人婚姻情况</text>
+        <view class="fl-acen mr-r-30">
+          <view class="uni-input fz-14">{{
+            getDicRe(isMarryList, form.isMarry)
+          }}</view>
         </view>
       </view>
     </picker>
@@ -108,7 +142,7 @@
           :start="startDate"
           :end="endDate"
         >
-          <view class="uni-input fz-15">{{form.idStartTime}}</view>
+          <view class="uni-input fz-15">{{ form.idStartTime }}</view>
         </picker>
         <text class="mr-l-10 mr-r-10">-</text>
         <picker
@@ -117,23 +151,34 @@
           :start="startDate"
           :end="endDate"
         >
-          <view class="uni-input fz-15">{{form.idEndTime}}</view>
+          <view class="uni-input fz-15">{{ form.idEndTime }}</view>
         </picker>
         <checkbox-group @change="checkboxChange">
           <label>
-            <checkbox style="transform:scale(0.7)" disabled :checked="isck" color="#0090D9" value="yse" />
+            <checkbox
+              style="transform: scale(0.7)"
+              disabled
+              :checked="isck"
+              color="#0090D9"
+              value="yse"
+            />
             <text class="fz-11 fc-999">长期</text>
           </label>
         </checkbox-group>
       </view>
     </view>
     <view class="book-img-content">
-      <view class="book-img fl-co mr-l-30" v-if="shouImg===''">
+      <view class="book-img fl-co mr-l-30" v-if="shouImg === ''">
         <text class="iconfont icon-changyongicon- fz-60 fc-999"></text>
         <text class="fz-14 fc-999">授权书</text>
       </view>
       <view class="img-box-shou mr-l-30" v-else>
-        <image class="book-img" mode="aspectFill" :src="shouImg" @tap="_previewImage(shouImg)" />
+        <image
+          class="book-img"
+          mode="aspectFill"
+          :src="shouImg"
+          @tap="_previewImage(shouImg)"
+        />
       </view>
     </view>
   </view>
@@ -155,17 +200,18 @@ export default {
         bankNo: "", // 银行卡号
         idStartTime: "起始日期", // 证件有限期起始日
         idEndTime: "截止日期", // 证件有限期截止日
-        idBack: '', // 身份背面证照
-        idPostive: '', // 身份正面证照
-        sqFile: '', //授权证照
+        idBack: "", // 身份背面证照
+        idPostive: "", // 身份正面证照
+        sqFile: "", //授权证照
       },
       faceImg: "",
       backImg: "",
       isLang: false,
-      isck:false,
+      isck: false,
       shouImg: "",
       endTime: "截止日期",
-      lsId:''
+      lsId: "",
+      isMarryList: [],
     };
   },
   computed: {
@@ -179,9 +225,29 @@ export default {
   onLoad(data) {
     this.lsId = data.id;
     this.getDetails();
+    this.getDicList();
   },
   methods: {
-      // 预览图片
+    // 获取数据字典
+    async getDicList() {
+      this.isMarryList = await this.getDicData(12);
+    },
+    async getDicData(id) {
+      const { body } = await this.$api.getDic({
+        catalogId: id,
+      });
+      return body.list;
+    },
+    getDicRe(list, type) {
+      let text = "";
+      list.forEach((item) => {
+        if (item.value === type) {
+          text = item.name;
+        }
+      });
+      return text;
+    },
+    // 预览图片
     _previewImage(img) {
       uni.previewImage({
         urls: [img],
@@ -196,16 +262,16 @@ export default {
         .then((res) => {
           const data = res.body.applyInfo;
           this.form = data.relationCust[0];
-          this.form.idEndTime = this.form.idEndTime.split(' ')[0];
-          this.form.idStartTime = this.form.idStartTime.split(' ')[0];
+          this.form.idEndTime = this.form.idEndTime.split(" ")[0];
+          this.form.idStartTime = this.form.idStartTime.split(" ")[0];
           this.faceImg = this.form.idPostive[0].url;
           this.backImg = this.form.idBack[0].url;
-          try{
-             this.shouImg = this.form.sqFile[0].url;
-          }catch{
-            console.log('err')
+          try {
+            this.shouImg = this.form.sqFile[0].url;
+          } catch {
+            console.log("err");
           }
-          if(this.form.idEndTime===''||this.form.idEndTime===null){
+          if (this.form.idEndTime === "" || this.form.idEndTime === null) {
             this.isck = true;
           }
         });

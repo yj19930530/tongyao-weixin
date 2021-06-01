@@ -340,13 +340,13 @@
       <view class="fl-bt detail-item-content">
         <view class="mr-l-30 fz-15 item-left">市场评估价格:</view>
         <view class="mr-r-30 fz-14 item-right">{{
-          dataDet.assessment_value || "-"
+          dataDet.home_assessment || "-"
         }}</view>
       </view>
       <view class="fl-bt detail-item-content">
         <view class="mr-l-30 fz-15 item-left">申报银行车价:</view>
         <view class="mr-r-30 fz-14 item-right">{{
-          dataDet.new_value || "-"
+          dataDet.send_car_value || "-"
         }}</view>
       </view>
       <view class="fl-bt detail-item-content">
@@ -364,7 +364,7 @@
       <view class="fl-bt detail-item-content">
         <view class="mr-l-30 fz-15 item-left">客户月供金额:</view>
         <view class="mr-r-30 fz-14 item-right">{{
-          dataDet.next_repayment || "-"
+          dataDet.next_all || "-"
         }}</view>
       </view>
     </view>

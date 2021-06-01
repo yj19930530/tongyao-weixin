@@ -6,9 +6,25 @@
     <view class="sfz-container">
       <view class="fl-bt">
         <view class="fl-fo">
-          <image class="sfz-img-style" mode="aspectFill" @tap="updataImgZheng('front')" v-if="faceImg===''" src="../../static/face.png"></image>
-          <image class="sfz-img-style" mode="aspectFill" v-else :src="faceImg" @tap="_previewImage(faceImg)"></image>
-          <view class="fl-cen update-btn" @tap="updataImgZheng('front')" v-if="faceImg===''">
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            @tap="updataImgZheng('front')"
+            v-if="faceImg === ''"
+            src="../../static/face.png"
+          ></image>
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            v-else
+            :src="faceImg"
+            @tap="_previewImage(faceImg)"
+          ></image>
+          <view
+            class="fl-cen update-btn"
+            @tap="updataImgZheng('front')"
+            v-if="faceImg === ''"
+          >
             <text class="fc-fff fz-14">上传身份证正面</text>
           </view>
           <view class="fl-cen update-btn" v-else @tap="deleteImg('front')">
@@ -16,9 +32,25 @@
           </view>
         </view>
         <view class="fl-fo">
-          <image class="sfz-img-style" mode="aspectFill" @tap="updataImgZheng('back')" v-if="backImg===''" src="../../static/blck.png"></image>
-          <image class="sfz-img-style" mode="aspectFill" v-else :src="backImg" @tap="_previewImage(backImg)"></image>
-          <view class="fl-cen update-btn" @tap="updataImgZheng('back')" v-if="backImg===''">
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            @tap="updataImgZheng('back')"
+            v-if="backImg === ''"
+            src="../../static/blck.png"
+          ></image>
+          <image
+            class="sfz-img-style"
+            mode="aspectFill"
+            v-else
+            :src="backImg"
+            @tap="_previewImage(backImg)"
+          ></image>
+          <view
+            class="fl-cen update-btn"
+            @tap="updataImgZheng('back')"
+            v-if="backImg === ''"
+          >
             <text class="fc-fff fz-14">上传身份证反面</text>
           </view>
           <view class="fl-cen update-btn" v-else @tap="deleteImg('back')">
@@ -40,12 +72,38 @@
         placeholder-class="fc-999"
       />
     </view>
-    <picker name="sex" @change="bindPickerChange" :value="form.sex" :range="array" range-key="name">
+    <picker
+      name="sex"
+      @change="bindPickerChange"
+      :value="form.sex"
+      :range="array"
+      range-key="name"
+    >
       <view class="sfz-form-item fl-bt">
         <text class="fz-15 fz-14 mr-l-30">主贷人性别</text>
         <view class="fl-acen mr-r-30">
-          <view class="uni-input fz-14 fc-999" v-if="form.sex===''">请选择</view>
-          <view class="uni-input fz-14" v-else>{{sexName}}</view>
+          <view class="uni-input fz-14 fc-999" v-if="form.sex === ''"
+            >请选择</view
+          >
+          <view class="uni-input fz-14" v-else>{{ sexName }}</view>
+          <text class="iconfont icon-youjiantou fc-999"></text>
+        </view>
+      </view>
+    </picker>
+    <picker
+      name="sex"
+      @change="bindPickerChangeMarry"
+      :value="form.isMarry"
+      :range="isMarryList"
+      range-key="name"
+    >
+      <view class="sfz-form-item fl-bt">
+        <text class="fz-15 fz-14 mr-l-30">主贷人婚姻情况</text>
+        <view class="fl-acen mr-r-30">
+          <view class="uni-input fz-14 fc-999" v-if="form.isMarry === ''"
+            >请选择</view
+          >
+          <view class="uni-input fz-14" v-else>{{ isMarryName }}</view>
           <text class="iconfont icon-youjiantou fc-999"></text>
         </view>
       </view>
@@ -132,7 +190,7 @@
           :end="endDate"
           @change="bindDateChangeStart"
         >
-          <view class="uni-input fz-15">{{form.idStartTime}}</view>
+          <view class="uni-input fz-15">{{ form.idStartTime }}</view>
         </picker>
         <text class="mr-l-10 mr-r-10">-</text>
         <picker
@@ -143,23 +201,36 @@
           :end="endDate"
           @change="bindDateChangeEnd"
         >
-          <view class="uni-input fz-15">{{form.idEndTime}}</view>
+          <view class="uni-input fz-15">{{ form.idEndTime }}</view>
         </picker>
         <checkbox-group @change="checkboxChange">
           <label>
-            <checkbox style="transform:scale(0.7)" color="#0090D9" value="yse" />
+            <checkbox
+              style="transform: scale(0.7)"
+              color="#0090D9"
+              value="yse"
+            />
             <text class="fz-11 fc-999">长期</text>
           </label>
         </checkbox-group>
       </view>
     </view>
     <view class="book-img-content">
-      <view class="book-img fl-co mr-l-30" @tap="uploadBook" v-if="shouImg===''">
+      <view
+        class="book-img fl-co mr-l-30"
+        @tap="uploadBook"
+        v-if="shouImg === ''"
+      >
         <text class="iconfont icon-changyongicon- fz-60 fc-999"></text>
         <text class="fz-14 fc-999">授权书</text>
       </view>
       <view class="img-box-shou mr-l-30" v-else>
-        <image class="book-img" mode="aspectFill" :src="shouImg" @tap="_previewImage(shouImg)" />
+        <image
+          class="book-img"
+          mode="aspectFill"
+          :src="shouImg"
+          @tap="_previewImage(shouImg)"
+        />
         <view class="fl-cen mr-t-10 delete-img">
           <text class="fz-11 fc-999" @tap="deleteImg2">删除</text>
         </view>
@@ -177,13 +248,16 @@ const { updataImgOnce } = require("../../utils/lib/common.js");
 export default {
   data() {
     return {
-      array: [{
-          name:'男',
-          value:'1'
-      }, {
-          name:'女',
-          value:'0'
-      }],
+      array: [
+        {
+          name: "男",
+          value: "1",
+        },
+        {
+          name: "女",
+          value: "0",
+        },
+      ],
       form: {
         liveAddress: "", // 居住地址
         name: "", // 姓名
@@ -196,9 +270,10 @@ export default {
         bankNo: "", // 银行卡号
         idStartTime: "起始日期", // 证件有限期起始日
         idEndTime: "截止日期", // 证件有限期截止日
-        idBack: '', // 身份背面证照
-        idPostive: '', // 身份正面证照
-        sqFile: '', //授权证照
+        idBack: "", // 身份背面证照
+        idPostive: "", // 身份正面证照
+        sqFile: "", //授权证照
+        isMarry:'',// 婚姻情况
       },
       faceImg: "",
       backImg: "",
@@ -248,6 +323,8 @@ export default {
           errorMsg: "请输入正确的电话号码",
         },
       ],
+      isMarryList:[],// 婚姻情况列表
+      isMarryName:'',
     };
   },
   computed: {
@@ -265,8 +342,9 @@ export default {
       this.faceImg = data.imgObj.faceImg;
       this.backImg = data.imgObj.backImg;
       this.shouImg = data.imgObj.shouImg;
-      this.sexName = this.getDicRe(this.array,this.form.sex)
+      this.sexName = this.getDicRe(this.array, this.form.sex);
     }
+    this.getDicList();
   },
   methods: {
     getDicRe(list, type) {
@@ -278,12 +356,22 @@ export default {
       });
       return text;
     },
-      // 预览图片
+    // 预览图片
     _previewImage(img) {
       uni.previewImage({
         urls: [img],
         current: img,
       });
+    },
+    // 获取数据字典
+    async getDicList() {
+      this.isMarryList = await this.getDicData(12);
+    },
+    async getDicData(id) {
+      const { body } = await this.$api.getDic({
+        catalogId: id,
+      });
+      return body.list;
     },
     // 保存
     savePage() {
@@ -293,12 +381,12 @@ export default {
       if (val) {
         // if (this.shouImg === "") return toast.showToast("请上传授权书");
         uni.setStorageSync("people", {
-          form:this.form,
+          form: this.form,
           imgObj: {
             faceImg: this.faceImg,
             backImg: this.backImg,
             shouImg: this.shouImg,
-          }
+          },
         });
         uni.showModal({
           title: "提示",
@@ -338,7 +426,7 @@ export default {
         encoding: "base64",
         filePath: data.imgPath,
         success: (res) => {
-          toast.showLoading('上传中')
+          toast.showLoading("上传中");
           uni.request({
             method: "POST",
             url: "https://yixi.market.alicloudapi.com/ocr/idcardocr",
@@ -362,16 +450,18 @@ export default {
                   this.form.name = objData.data.name;
                   this.form.idNo = objData.data.idcard;
                   this.sexName = objData.data.gender;
-                  if(objData.data.gender==='男'){
+                  if (objData.data.gender === "男") {
                     this.form.sex = "1";
-                  }else{
+                  } else {
                     this.form.sex = "0";
                   }
                   this.form.idAddress = objData.data.address;
                 } else {
                   this.backImg = data.imgPath;
                   this.form.idBack = data.imgObj;
-                  this.form.idStartTime = this.timeText(objData.data.start_date);
+                  this.form.idStartTime = this.timeText(
+                    objData.data.start_date
+                  );
                   this.form.idEndTime = this.timeText(objData.data.end_date);
                   this.endTime = this.timeText(objData.data.end_date);
                   this.form.idOffice = objData.data.jiguan;
@@ -403,6 +493,10 @@ export default {
     bindPickerChange(data) {
       this.form.sex = this.array[data.detail.value].value;
       this.sexName = this.array[data.detail.value].name;
+    },
+    bindPickerChangeMarry(data) {
+      this.form.isMarry = this.isMarryList[data.detail.value].value;
+      this.isMarryName = this.isMarryList[data.detail.value].name;
     },
     bindDateChangeStart: function (e) {
       this.form.idStartTime = e.target.value;

@@ -11,8 +11,10 @@
         <text class="mr-l-30 fz-15">业务品种</text>
         <view class="fl-acen mr-r-30">
           <view class="fl-acen">
-            <view class="uni-input fz-14 fc-999" v-if="form.loanType===''">请选择</view>
-            <view class="uni-input fz-14" v-else>{{loanName}}</view>
+            <view class="uni-input fz-14 fc-999" v-if="form.loanType === ''"
+              >请选择</view
+            >
+            <view class="uni-input fz-14" v-else>{{ loanName }}</view>
           </view>
           <text class="iconfont icon-youjiantou"></text>
         </view>
@@ -39,13 +41,19 @@
         <text class="mr-l-30 fz-15">业务类型</text>
         <view class="fl-acen mr-r-30">
           <view class="fl-acen">
-            <view class="uni-input fz-14 fc-999" v-if="form.businessType===''">请选择</view>
-            <view class="uni-input fz-14" v-else>{{businessName}}</view>
+            <view class="uni-input fz-14 fc-999" v-if="form.businessType === ''"
+              >请选择</view
+            >
+            <view class="uni-input fz-14" v-else>{{ businessName }}</view>
           </view>
           <text class="iconfont icon-youjiantou"></text>
         </view>
       </view>
     </picker>
+    <view class="loan-form-item fl-bt">
+      <text class="mr-l-30 fz-15">业务利率</text>
+      <uni-number-box :min="0" :max="1" :step="0.1" :value="form.workRate" @change="numberChange" />
+    </view>
     <view class="loan-form-item fl-bt">
       <text class="mr-l-30 fz-15">意向金额</text>
       <view class="fl-acen">
@@ -71,8 +79,12 @@
         <text class="mr-l-30 fz-15">意向贷款期限</text>
         <view class="fl-acen mr-r-30">
           <view class="fl-acen">
-            <view class="uni-input fz-14 fc-999" v-if="form.intentionTerm===''">请选择</view>
-            <view class="uni-input fz-14" v-else>{{intentionName}}</view>
+            <view
+              class="uni-input fz-14 fc-999"
+              v-if="form.intentionTerm === ''"
+              >请选择</view
+            >
+            <view class="uni-input fz-14" v-else>{{ intentionName }}</view>
           </view>
           <text class="iconfont icon-youjiantou"></text>
         </view>
@@ -103,6 +115,7 @@
 <script>
 const graceChecker = require("../../utils/graceChecker");
 const { toast, common } = require("../../utils/index");
+import uniNumberBox from "../../components/uni-number-box/uni-number-box";
 export default {
   data() {
     return {
@@ -116,6 +129,7 @@ export default {
         intentionTerm: "", // 意向期限
         loanAmount: "", // 意向贷款金额
         loanType: "", // 品种
+        workRate:0,// 业务利率
       },
       editType: false,
       editId: 0,
@@ -157,6 +171,9 @@ export default {
         },
       ],
     };
+  },
+  components: {
+    uniNumberBox,
   },
   async onLoad(obj) {
     await this.getDicList();
@@ -222,10 +239,14 @@ export default {
       });
       return body.list;
     },
+    numberChange(val){
+      this.form.workRate = val;
+    },
     // 保存
     saveForm() {
       const val = graceChecker.check(this.form, this.rules);
       if (val) {
+        console.log(this.form)
         uni.setStorageSync("loan", this.form);
         uni.showModal({
           title: "提示",

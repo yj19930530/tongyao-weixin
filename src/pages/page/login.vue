@@ -19,7 +19,7 @@
             type="password"
             v-model="form.password"
             class="item-input-style fl-acen"
-            placeholder="请输入登录账号"
+            placeholder="请输入登录密码"
             placeholder-class="fc-999"
           />
         </view>

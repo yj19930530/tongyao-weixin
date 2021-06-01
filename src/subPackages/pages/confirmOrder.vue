@@ -2,51 +2,63 @@
   <view id="dian-order-container">
     <view class="dian-form-item fl-bt mr-t-20">
       <text class="mr-l-30 fz-15">部门</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.dept||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.dept || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">业务员</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.busName||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.busName || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">地区</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.area||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.area || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">审核时间</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.examineTime||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.examineTime || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">上户地址</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.registeredPlace||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.registeredPlace || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt mr-t-20">
       <text class="mr-l-30 fz-15">客户姓名</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.custName||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.custName || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">性别</text>
-      <text class="mr-r-30 fz-14">{{getDicRe(array,detailsObj.custSex)}}</text>
+      <text class="mr-r-30 fz-14">{{
+        getDicRe(array, detailsObj.custSex)
+      }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">身份证号码</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.idCard||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.idCard || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">联系电话</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.custPhone||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.custPhone || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">客户婚姻</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.isMarry===1?'已婚':'未婚'}}</text>
+      <text class="mr-r-30 fz-14">{{
+        detailsObj.isMarry === 1 ? "已婚" : "未婚"
+      }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">签约方式</text>
-      <text class="mr-r-30 fz-14">{{detailsObj.signingType||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.signingType || "-" }}</text>
     </view>
     <view class="dian-form-item fl-bt">
       <text class="mr-l-30 fz-15">拆单原因</text>
-      <text class="mr-r-30 fz-14">{{cancellation_reasons||'-'}}</text>
+      <text class="mr-r-30 fz-14">{{ cancellation_reasons || "-" }}</text>
+    </view>
+    <view class="dian-form-item fl-bt mr-t-20">
+      <text class="mr-l-30 fz-15">客户工作职位</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.cust_position || "-" }}</text>
+    </view>
+    <view class="dian-form-item fl-bt mr-t-20">
+      <text class="mr-l-30 fz-15">配偶工作职位</text>
+      <text class="mr-r-30 fz-14">{{ detailsObj.spouse_position || "-" }}</text>
     </view>
     <view class="dian-form-item2 fl-bt mr-t-20" @tap="todkFunc">
       <text class="mr-l-30 fz-15 fw-bold">贷款详情</text>
@@ -64,11 +76,21 @@
     </view>
     <view class="form-input-eart">
       <text class="fz-15 mr-l-30">征信情况</text>
-      <textarea maxlength="300" v-model="zxText" disabled class="textarea-style fz-14" />
+      <textarea
+        maxlength="300"
+        v-model="zxText"
+        disabled
+        class="textarea-style fz-14"
+      />
     </view>
     <view class="form-input-eart mr-t-20">
       <text class="fz-15 mr-l-30">电核补充说明</text>
-      <textarea v-model="detailsObj.remark" maxlength="300" disabled class="textarea-style fz-14" />
+      <textarea
+        v-model="detailsObj.remark"
+        maxlength="300"
+        disabled
+        class="textarea-style fz-14"
+      />
     </view>
     <view class="cofim-btn fl-cen" @tap="dhconfimFunc">
       <text class="fz-20 fc-fff">确认通过</text>

@@ -74,7 +74,6 @@ function updataImg() {
                         filePath: item,
                         header: { 'token': token },
                         success: (r) => {
-                            console.log(r)
                             uni.hideLoading();
                             let resolveData = JSON.parse(r.data)
                             if (resolveData.code === -100) {
